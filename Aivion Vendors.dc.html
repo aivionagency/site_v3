@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  @keyframes av-marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .av-marq-wrap{position:relative;overflow:hidden;width:100%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+  .av-marq-track{display:flex;gap:14px;width:max-content;animation:av-marq 34s linear infinite}
+  .av-marq-wrap:hover .av-marq-track{animation-play-state:paused}
+  .av-plaque{font-family:'JetBrains Mono',monospace;letter-spacing:.04em;white-space:nowrap;flex:none;display:flex;align-items:center;transition:color .35s,border-color .35s,background .35s;border:1px solid rgba(var(--ink),.13);color:rgba(var(--ink),.5)}
+  .av-plaque:hover{color:var(--acc,#fff);border-color:var(--acc,#fff);background:rgba(var(--ink),.02)}
+</style>
+</helmet>
+<div style="{{ outer }}">
+  <div style="{{ labelWrap }}"><span style="width:26px;height:1px;background:var(--accSoft,rgba(var(--ink),.4))"></span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.22em;color:rgba(var(--ink),.45)">{{ label }}</span></div>
+  <div class="av-marq-wrap">
+    <div class="av-marq-track">
+      <span class="av-plaque" style="{{ pst }}">Anthropic · Claude</span>
+      <span class="av-plaque" style="{{ pst }}">OpenAI</span>
+      <span class="av-plaque" style="{{ pst }}">Google · Gemini</span>
+      <span class="av-plaque" style="{{ pst }}">Яндекс · YandexGPT</span>
+      <span class="av-plaque" style="{{ pst }}">Сбер · GigaChat</span>
+      <span class="av-plaque" style="{{ pst }}">DeepSeek</span>
+      <span class="av-plaque" style="{{ pst }}">Qwen</span>
+      <span class="av-plaque" style="{{ pst }}">Llama</span>
+      <span class="av-plaque" style="{{ pst }}">T-Pro</span>
+      <span class="av-plaque" style="{{ pst }}" aria-hidden="true">Anthropic · Claude</span>
+      <span class="av-plaque" style="{{ pst }}" aria-hidden="true">OpenAI</span>
+      <span class="av-plaque" style="{{ pst }}" aria-hidden="true">Google · Gemini</span>
+      <span class="av-plaque" style="{{ pst }}" aria-hidden="true">Яндекс · YandexGPT</span>
+      <span class="av-plaque" style="{{ pst }}" aria-hidden="true">Сбер · GigaChat</span>
+      <span class="av-plaque" style="{{ pst }}" aria-hidden="true">DeepSeek</span>
+      <span class="av-plaque" style="{{ pst }}" aria-hidden="true">Qwen</span>
+      <span class="av-plaque" style="{{ pst }}" aria-hidden="true">Llama</span>
+      <span class="av-plaque" style="{{ pst }}" aria-hidden="true">T-Pro</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:120},&quot;tone&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;muted&quot;,&quot;hero&quot;],&quot;default&quot;:&quot;muted&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;label&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Работаем на моделях, которым доверяют миллионы&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const tone = this.props.tone ?? 'muted';
+    const hero = tone === 'hero';
+    return {
+      label: this.props.label ?? 'Работаем на моделях, которым доверяют миллионы',
+      outer: hero ? 'opacity:1' : 'opacity:.82',
+      labelWrap: 'display:flex;align-items:center;gap:13px;justify-content:center;margin-bottom:26px',
+      pst: hero
+        ? 'font-size:15px;padding:14px 26px'
+        : 'font-size:13px;padding:11px 20px',
+    };
+  }
+}
+</script>
+</body>
+</html>

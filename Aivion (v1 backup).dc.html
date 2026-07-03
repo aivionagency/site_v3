@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<!-- fonts loaded via JS in componentDidMount to avoid cross-origin link error noise -->
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:#0A0A0A;color:#EDEDED;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:rgba(255,255,255,.16);color:#fff}
+  input,textarea,select,button{font-family:inherit}
+  input:focus,textarea:focus,select:focus{outline:none}
+  select{appearance:none;-webkit-appearance:none}
+  a{color:inherit;text-decoration:none}
+  @keyframes av-scrollhint{0%{transform:translateY(0);opacity:.2}50%{opacity:1}100%{transform:translateY(10px);opacity:.2}}
+  @keyframes av-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+  @keyframes av-glow{0%,100%{opacity:.35}50%{opacity:.7}}
+  @keyframes av-spin{to{transform:rotate(360deg)}}
+  @keyframes av-spin-rev{to{transform:rotate(-360deg)}}
+  @keyframes av-dash{to{stroke-dashoffset:-1400}}
+  @keyframes av-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+  @keyframes av-floatx{0%,100%{transform:translate(0,0)}50%{transform:translate(22px,-18px)}}
+  @keyframes av-scan{0%{transform:translateY(-120%)}100%{transform:translateY(820%)}}
+  @keyframes av-pulse{0%,100%{opacity:.12;transform:scale(1)}50%{opacity:.4;transform:scale(1.04)}}
+  @keyframes av-drift{0%{background-position:0 0}100%{background-position:72px 72px}}
+  @keyframes av-blip{0%,100%{opacity:.25}50%{opacity:1}}
+  @keyframes av-reveal{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+  .rv-on [data-reveal]{opacity:0}
+  .rv-on [data-reveal][data-in]{animation:av-reveal .9s cubic-bezier(.16,.8,.3,1) both}
+  .rv-on [data-reveal][data-in][data-d="1"]{animation-delay:.08s}
+  .rv-on [data-reveal][data-in][data-d="2"]{animation-delay:.16s}
+  .rv-on [data-reveal][data-in][data-d="3"]{animation-delay:.24s}
+  .rv-on [data-reveal][data-in][data-d="4"]{animation-delay:.32s}
+  .av-comp:hover .av-comp-bar{transform:scaleX(1) !important}
+  .av-comp:hover .av-comp-arrow{transform:translate(4px,-4px);color:#fff !important}
+  .av-acc{color:var(--acc,#fff)}
+  .av-xcard{transition:flex .55s cubic-bezier(.16,.8,.3,1),opacity .4s ease}
+  .av-tilt{transition:transform .5s cubic-bezier(.16,.8,.3,1),border-color .4s}
+  .av-sup:hover .av-sup-no{color:var(--acc,#fff) !important;border-color:var(--acc,#fff) !important}
+  .av-sup:hover{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.3) !important}
+  .av-bar-fill{transform-origin:left;transform:scaleX(0);transition:transform 1.1s cubic-bezier(.16,.8,.3,1)}
+  [data-in] .av-bar-fill,[data-bars-in] .av-bar-fill{transform:scaleX(1)}
+</style>
+</helmet>
+
+<div id="av-root" style="position:relative;min-height:100vh">
+
+  <div style="position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:72px 72px;mask-image:radial-gradient(120% 120% at 50% 0%,#000 30%,transparent 90%);-webkit-mask-image:radial-gradient(120% 120% at 50% 0%,#000 30%,transparent 90%)"></div>
+  <div style="position:fixed;top:-20%;left:50%;transform:translateX(-50%);width:90vw;height:60vh;z-index:0;pointer-events:none;background:radial-gradient(closest-side,var(--accGlow,rgba(255,255,255,.07)),transparent);filter:blur(20px)"></div>
+
+
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(10,10,10,.55);border-bottom:1px solid rgba(255,255,255,.07)">
+    <div style="max-width:1280px;margin:0 auto;padding:18px clamp(20px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:24px">
+      <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:11px;background:none;border:none;cursor:pointer;color:#fff">
+        <span style="width:11px;height:11px;border:1.5px solid #fff;display:inline-block;transform:rotate(45deg);position:relative"><span style="position:absolute;inset:2px;background:var(--acc,#fff);animation:av-glow 3.5s ease-in-out infinite"></span></span>
+        <span style="font-weight:700;letter-spacing:.34em;font-size:15px;padding-left:3px">AIVION</span>
+      </button>
+      <div style="display:flex;align-items:center;gap:clamp(14px,2.4vw,38px)">
+        <button onClick="{{ goHome }}" style="background:none;border:none;cursor:pointer;color:#fff;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.06em;padding:6px 0;opacity:{{ nav.home }}">Главная</button>
+        <button onClick="{{ goCon }}" style="background:none;border:none;cursor:pointer;color:#fff;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.06em;padding:6px 0;opacity:{{ nav.con }}">ИИ-консалтинг</button>
+        <button onClick="{{ goDev }}" style="background:none;border:none;cursor:pointer;color:#fff;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.06em;padding:6px 0;opacity:{{ nav.dev }}">ИИ-разработка</button>
+        <button onClick="{{ goForm }}" style="border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.02);color:#fff;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;padding:11px 20px;transition:all .3s" style-hover="border:1px solid rgba(255,255,255,.7);background:rgba(255,255,255,.07)">ЗАЯВКА</button>
+      </div>
+    </div>
+  </nav>
+
+  <div style="position:relative;z-index:1;transition:opacity .26s ease;opacity:{{ pageOp }}">
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <div>
+      <!-- ============ HERO ============ -->
+      <header style="position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:140px clamp(20px,4vw,48px) 80px;overflow:hidden">
+        <canvas id="av-canvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0"></canvas>
+        <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(80% 60% at 50% 45%,transparent 40%,rgba(10,10,10,.6) 100%)"></div>
+        <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.32em;color:rgba(255,255,255,.5);margin-bottom:34px;display:flex;align-items:center;gap:14px">
+            <span style="width:30px;height:1px;background:var(--accSoft,rgba(255,255,255,.4))"></span>AI ENGINEERING · С 2023
+          </div>
+          <h1 style="font-size:clamp(46px,8.4vw,116px);font-weight:700;line-height:.96;letter-spacing:-.03em;max-width:14ch">Внедряем ИИ в&nbsp;операционку</h1>
+          <p style="margin-top:34px;font-size:clamp(18px,2vw,24px);line-height:1.5;color:rgba(255,255,255,.62);max-width:46ch;font-weight:400">Освобождаем вам до 40 часов в неделю и ускоряем процессы в&nbsp;5–10&nbsp;раз</p>
+          <div style="margin-top:46px;display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+            <button onClick="{{ goForm }}" style="background:#fff;color:#0A0A0A;border:none;cursor:pointer;font-weight:600;font-size:15px;letter-spacing:.01em;padding:17px 32px;display:flex;align-items:center;gap:12px;transition:all .3s" style-hover="background:rgba(255,255,255,.85);transform:translateY(-2px)">Бесплатный аудит<span style="font-family:'JetBrains Mono',monospace">→</span></button>
+            <button onClick="{{ goCases }}" style="background:none;color:#fff;border:1px solid rgba(255,255,255,.22);cursor:pointer;font-size:15px;padding:17px 30px;transition:all .3s" style-hover="border-color:rgba(255,255,255,.6)">Наши кейсы</button>
+          </div>
+        </div>
+        <div style="position:absolute;left:clamp(20px,4vw,48px);bottom:34px;z-index:2;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.32);display:flex;align-items:center;gap:10px">
+          <span style="display:inline-block;animation:av-scrollhint 2s ease-in-out infinite">↓</span> SCROLL
+        </div>
+        <div style="position:absolute;right:clamp(20px,4vw,48px);bottom:34px;z-index:2;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.32)">[ 55.75°N · 37.61°E ]</div>
+      </header>
+
+      <!-- ============ О НАС ============ -->
+      <section style="max-width:1280px;margin:0 auto;padding:clamp(80px,11vw,150px) clamp(20px,4vw,48px)">
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:48px">01 / О НАС</div>
+        <div style="display:grid;grid-template-columns:1.55fr .9fr;gap:clamp(36px,6vw,90px);align-items:start">
+          <p data-reveal="" style="font-size: clamp(24px,3.1vw,42px); line-height: 1.34; font-weight: 300; letter-spacing: -.01em; width: 1083px; height: 463px">Мы — инженерная команда, специализирующаяся на внедрении ИИ в продажи, аналитику, коммуникации и внутренние процессы <span style="color: rgba(255, 255, 255, 0.45);">с 2023 года</span>. <br><br>Знаем, как не переплатить, правильно подобрать архитектуру и учесть санкционные и юридические риски при работе с AI в контуре РФ.</p>
+          <div data-reveal="" data-d="1" style="border-top:1px solid rgba(255,255,255,.12)">
+            
+            
+            
+            
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ КЕЙСЫ ============ -->
+      <section id="av-cases" style="max-width:1280px;margin:0 auto;padding:clamp(40px,6vw,90px) clamp(20px,4vw,48px) clamp(80px,11vw,140px)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;margin-bottom:clamp(40px,6vw,72px)">
+          <div>
+            <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:22px">02 / НАШИ ВНЕДРЕНИЯ</div>
+            <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1">Наши внедрения</h2>
+          </div>
+          <a href="#" data-reveal="" data-d="2" style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.04em;color:rgba(255,255,255,.6);border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:5px;transition:color .3s" style-hover="color:#fff">смотреть все кейсы →</a>
+        </div>
+        <div>
+          <article data-reveal="" class="av-case" style="display:grid;grid-template-columns:90px 1fr 1.1fr;gap:clamp(20px,4vw,56px);align-items:center;padding:clamp(28px,3.5vw,46px) 0;border-top:1px solid rgba(255,255,255,.12);cursor:default;transition:padding-left .4s ease" style-hover="padding-left:14px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,.35)">К—01</div>
+            <div>
+              <h3 style="font-size:clamp(21px,2.2vw,28px);font-weight:600;margin-bottom:12px;letter-spacing:-.01em">Авторазбор телефонных звонков</h3>
+              <p style="color:rgba(255,255,255,.55);font-size:16px;line-height:1.5;max-width:42ch">ИИ-микросервис разбирает звонки и контролирует работу операторов.</p>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:clamp(44px,6vw,82px);font-weight:700;letter-spacing:-.03em;line-height:1;color:var(--acc,#fff)"><span data-count="" data-target="83" data-prefix="−" data-suffix="%">−83%</span></div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,.45);letter-spacing:.04em;margin-top:8px">ошибок в CRM после разбора</div>
+            </div>
+          </article>
+          <article data-reveal="" class="av-case" style="display:grid;grid-template-columns:90px 1fr 1.1fr;gap:clamp(20px,4vw,56px);align-items:center;padding:clamp(28px,3.5vw,46px) 0;border-top:1px solid rgba(255,255,255,.12);cursor:default;transition:padding-left .4s ease" style-hover="padding-left:14px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,.35)">К—02</div>
+            <div>
+              <h3 style="font-size:clamp(21px,2.2vw,28px);font-weight:600;margin-bottom:12px;letter-spacing:-.01em">ИИ-составитель ТЗ</h3>
+              <p style="color:rgba(255,255,255,.55);font-size:16px;line-height:1.5;max-width:42ch">Помощник пишет документацию по шаблону и снимает проблему «чистого листа».</p>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:clamp(44px,6vw,82px);font-weight:700;letter-spacing:-.03em;line-height:1;color:var(--acc,#fff)"><span data-count="" data-target="16" data-prefix="×">×16</span></div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,.45);letter-spacing:.04em;margin-top:8px">скорость подготовки спецификаций</div>
+            </div>
+          </article>
+          <article data-reveal="" class="av-case" style="display:grid;grid-template-columns:90px 1fr 1.1fr;gap:clamp(20px,4vw,56px);align-items:center;padding:clamp(28px,3.5vw,46px) 0;border-top:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12);cursor:default;transition:padding-left .4s ease" style-hover="padding-left:14px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,.35)">К—03</div>
+            <div>
+              <h3 style="font-size:clamp(21px,2.2vw,28px);font-weight:600;margin-bottom:12px;letter-spacing:-.01em">Контент-завод</h3>
+              <p style="color:rgba(255,255,255,.55);font-size:16px;line-height:1.5;max-width:42ch">Связка ИИ-агентов, которая собирает посты для Telegram.</p>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:clamp(44px,6vw,82px);font-weight:700;letter-spacing:-.03em;line-height:1;color:var(--acc,#fff)"><span data-count="" data-target="20" data-prefix="×">×20</span></div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,.45);letter-spacing:.04em;margin-top:8px">скорость производства контента</div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============ КОМПЕТЕНЦИИ ============ -->
+      <section style="max-width:1280px;margin:0 auto;padding:clamp(40px,6vw,90px) clamp(20px,4vw,48px) clamp(80px,11vw,140px)">
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:22px">03 / НАШИ КОМПЕТЕНЦИИ</div>
+        <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(40px,5vw,64px)">Наши компетенции</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,2.4vw,30px)">
+          <div data-reveal="" class="av-comp" style="position:relative;border:1px solid rgba(255,255,255,.12);padding:clamp(30px,3.4vw,52px);min-height:340px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;transition:background .4s,border-color .4s;cursor:default" style-hover="background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.32)">
+            <div style="position:absolute;top:0;left:0;width:100%;height:2px;background:var(--acc,#fff);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.16,.8,.3,1)" class="av-comp-bar"></div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,.4)">[ 01 ]</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:18px;color:rgba(255,255,255,.4)">→</span>
+            </div>
+            <div>
+              <h3 style="font-size:clamp(28px,3.4vw,46px);font-weight:700;letter-spacing:-.02em;margin-bottom:18px">ИИ-консалтинг</h3>
+              <p style="color:rgba(255,255,255,.55);font-size:17px;line-height:1.5;max-width:34ch">Проводим диагностику процессов и определяем, как снизить операционную нагрузку.</p>
+            </div>
+          </div>
+          <div data-reveal="" data-d="1" class="av-comp" style="position:relative;border:1px solid rgba(255,255,255,.12);padding:clamp(30px,3.4vw,52px);min-height:340px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;transition:background .4s,border-color .4s;cursor:default" style-hover="background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.32)">
+            <div style="position:absolute;top:0;left:0;width:100%;height:2px;background:var(--acc,#fff);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.16,.8,.3,1)" class="av-comp-bar"></div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,.4)">[ 02 ]</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:18px;color:rgba(255,255,255,.4)">→</span>
+            </div>
+            <div>
+              <h3 style="font-size:clamp(28px,3.4vw,46px);font-weight:700;letter-spacing:-.02em;margin-bottom:18px">Разработка</h3>
+              <p style="color:rgba(255,255,255,.55);font-size:17px;line-height:1.5;max-width:34ch">Создаём веб-интерфейсы и ИИ-агентов, при необходимости дообучаем/настраиваем локальные модели.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ПРОЦЕСС ============ -->
+      <section style="max-width:1280px;margin:0 auto;padding:clamp(40px,6vw,90px) clamp(20px,4vw,48px) clamp(80px,11vw,140px)">
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:22px">04 / КАК МЫ РАБОТАЕМ</div>
+        <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(44px,5.5vw,72px)">Как мы работаем</h2>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,2vw,28px)">
+          <div data-reveal="" style="border-top:1px solid rgba(255,255,255,.22);padding-top:24px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px"><span style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:500;color:#fff">01</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.18);padding:4px 8px">КОНСАЛТИНГ</span></div>
+            <h3 style="font-size:20px;font-weight:600;margin-bottom:14px">Погружаемся в бизнес</h3>
+            <p style="color:rgba(255,255,255,.5);font-size:14.5px;line-height:1.55">После заявки собираем информацию о вашей компании: изучаем процессы, команду и инструменты. На встрече определяем узкие места, оцениваем потери времени и выявляем задачи, которые выгоднее всего автоматизировать.</p>
+          </div>
+          <div data-reveal="" data-d="1" style="border-top:1px solid rgba(255,255,255,.22);padding-top:24px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px"><span style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:500;color:#fff">02</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.18);padding:4px 8px">КОНСАЛТИНГ</span></div>
+            <h3 style="font-size:20px;font-weight:600;margin-bottom:14px">Считаем окупаемость</h3>
+            <p style="color:rgba(255,255,255,.5);font-size:14.5px;line-height:1.55">Оцениваем стоимость разработки и поддержки, рассчитываем потенциальную экономию и сроки окупаемости. Предоставляем отчёт с приоритетными направлениями, решениями, сроками и ожидаемым эффектом.</p>
+          </div>
+          <div data-reveal="" data-d="2" style="border-top:1px solid rgba(255,255,255,.22);padding-top:24px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px"><span style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:500;color:#fff">03</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.5);padding:4px 8px">РАЗРАБОТКА</span></div>
+            <h3 style="font-size:20px;font-weight:600;margin-bottom:14px">Внедряем</h3>
+            <p style="color:rgba(255,255,255,.5);font-size:14.5px;line-height:1.55">После согласования запускаем пилот и проверяем гипотезу на практике: изменились ли метрики, снизилась ли нагрузка на ФОТ и пр.</p>
+          </div>
+          <div data-reveal="" data-d="3" style="border-top:1px solid rgba(255,255,255,.22);padding-top:24px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px"><span style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:500;color:#fff">04</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.5);padding:4px 8px">РАЗРАБОТКА</span></div>
+            <h3 style="font-size:20px;font-weight:600;margin-bottom:14px">Поддерживаем</h3>
+            <p style="color:rgba(255,255,255,.5);font-size:14.5px;line-height:1.55">Настраиваем дашборды с техническими метриками. Если возникает проблема, мы сразу её видим и приступаем к решению.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ FAQ ============ -->
+      <section style="max-width:1280px;margin:0 auto;padding:clamp(40px,6vw,90px) clamp(20px,4vw,48px) clamp(80px,11vw,140px)">
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:22px">05 / FAQ</div>
+        <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(36px,4.5vw,56px)">Частые вопросы</h2>
+        <div data-reveal="" data-d="1" style="border-top:1px solid rgba(255,255,255,.14)">
+
+          <div style="border-bottom:1px solid rgba(255,255,255,.14)">
+            <button onClick="{{ tFaq0 }}" style="width:100%;background:none;border:none;cursor:pointer;color:#fff;text-align:left;display:flex;align-items:center;gap:20px;padding:clamp(22px,2.4vw,30px) 0">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,.35);flex-shrink:0">F—01</span>
+              <span style="flex:1;font-size:clamp(18px,2vw,24px);font-weight:500;letter-spacing:-.01em">Сколько стоят услуги?</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:22px;flex-shrink:0;transition:transform .4s cubic-bezier(.16,.8,.3,1);{{ faq.s0 }}">+</span>
+            </button>
+            <div style="display:grid;transition:grid-template-rows .55s cubic-bezier(.16,.8,.3,1),opacity .4s ease;{{ faq.p0 }}"><div style="overflow:hidden"><div style="padding:0 0 30px 49px;max-width:74ch;color:rgba(255,255,255,.6);font-size:16px;line-height:1.6">
+              <p style="margin-bottom:18px">Стоимость зависит от масштаба задачи. Разница между простым чат-ботом и полноценной системой автоматизации такая же, как между приёмом таблетки и операцией на сердце: оба случая касаются здоровья, но требуют совершенно разного объёма работы. Ориентировочные цифры приведены ниже.</p>
+              <div style="display:grid;gap:0;margin:22px 0;border-top:1px solid rgba(255,255,255,.1)">
+                <div style="display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span>Чат-боты и ИИ-ассистенты внутри Telegram</span><span style="font-family:'JetBrains Mono',monospace;color:#fff;white-space:nowrap">от 40 000 ₽</span></div>
+                <div style="display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span>Интеграция ИИ с CRM, ERP и внутренними системами</span><span style="font-family:'JetBrains Mono',monospace;color:#fff;white-space:nowrap">от 100 000 ₽</span></div>
+                <div style="display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span>Кастомные мультиагентные системы</span><span style="font-family:'JetBrains Mono',monospace;color:#fff;white-space:nowrap">от 180 000 ₽</span></div>
+                <div style="display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span>Комплексные решения с несколькими сценариями автоматизации</span><span style="font-family:'JetBrains Mono',monospace;color:#fff;white-space:nowrap">от 700 000 ₽</span></div>
+              </div>
+              <p style="margin-bottom:14px">На итоговую стоимость влияют количество интеграций, объём данных, требования к безопасности и текущий уровень автоматизации. Поэтому точную оценку мы готовим после анализа ваших задач и существующей инфраструктуры.</p>
+              <p style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,.4)">* Локальное развёртывание ИИ требует дополнительных трат на железо.</p>
+            </div></div></div>
+          </div>
+
+          <div style="border-bottom:1px solid rgba(255,255,255,.14)">
+            <button onClick="{{ tFaq1 }}" style="width:100%;background:none;border:none;cursor:pointer;color:#fff;text-align:left;display:flex;align-items:center;gap:20px;padding:clamp(22px,2.4vw,30px) 0">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,.35);flex-shrink:0">F—02</span>
+              <span style="flex:1;font-size:clamp(18px,2vw,24px);font-weight:500;letter-spacing:-.01em">Сколько занимает внедрение?</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:22px;flex-shrink:0;transition:transform .4s cubic-bezier(.16,.8,.3,1);{{ faq.s1 }}">+</span>
+            </button>
+            <div style="display:grid;transition:grid-template-rows .55s cubic-bezier(.16,.8,.3,1),opacity .4s ease;{{ faq.p1 }}"><div style="overflow:hidden"><div style="padding:0 0 30px 49px;max-width:74ch;color:rgba(255,255,255,.6);font-size:16px;line-height:1.6">
+              <p>Простые решения занимают до 2 недель. Масштабные проекты с интеграциями, сложной логикой или локальной LLM — в среднем 1–3 месяца.</p>
+            </div></div></div>
+          </div>
+
+          <div style="border-bottom:1px solid rgba(255,255,255,.14)">
+            <button onClick="{{ tFaq2 }}" style="width:100%;background:none;border:none;cursor:pointer;color:#fff;text-align:left;display:flex;align-items:center;gap:20px;padding:clamp(22px,2.4vw,30px) 0">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,.35);flex-shrink:0">F—03</span>
+              <span style="flex:1;font-size:clamp(18px,2vw,24px);font-weight:500;letter-spacing:-.01em">С чего начать в моём бизнесе?</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:22px;flex-shrink:0;transition:transform .4s cubic-bezier(.16,.8,.3,1);{{ faq.s2 }}">+</span>
+            </button>
+            <div style="display:grid;transition:grid-template-rows .55s cubic-bezier(.16,.8,.3,1),opacity .4s ease;{{ faq.p2 }}"><div style="overflow:hidden"><div style="padding:0 0 30px 49px;max-width:78ch;color:rgba(255,255,255,.6);font-size:16px;line-height:1.6">
+              <p style="margin-bottom:20px">Лучший ROI обычно дают процессы, которые повторяются по одному сценарию, занимают много времени у сотрудников и напрямую влияют на выручку:</p>
+              <div style="display:grid;gap:14px;margin-bottom:20px">
+                <div style="display:flex;gap:14px"><span style="color:#fff;font-family:'JetBrains Mono',monospace;flex-shrink:0">01</span><span><b style="color:#eee;font-weight:600">Квалификация лидов</b> — ИИ отвечает мгновенно, квалифицирует по скрипту, передаёт готовый лид в CRM. С этого начинают чаще всего.</span></div>
+                <div style="display:flex;gap:14px"><span style="color:#fff;font-family:'JetBrains Mono',monospace;flex-shrink:0">02</span><span><b style="color:#eee;font-weight:600">Поддержка клиентов</b> — закрытие 90% типовых запросов без оператора.</span></div>
+                <div style="display:flex;gap:14px"><span style="color:#fff;font-family:'JetBrains Mono',monospace;flex-shrink:0">03</span><span><b style="color:#eee;font-weight:600">Входящие звонки</b> — приём 24/7, квалификация, запись в CRM.</span></div>
+                <div style="display:flex;gap:14px"><span style="color:#fff;font-family:'JetBrains Mono',monospace;flex-shrink:0">04</span><span><b style="color:#eee;font-weight:600">Внутренние операции</b> — саммари встреч, ассистент по документам.</span></div>
+              </div>
+              <p>Такие задачи легко измеряются, быстро запускаются и позволяют увидеть результат с минимальными вложениями.</p>
+            </div></div></div>
+          </div>
+
+          <div style="border-bottom:1px solid rgba(255,255,255,.14)">
+            <button onClick="{{ tFaq3 }}" style="width:100%;background:none;border:none;cursor:pointer;color:#fff;text-align:left;display:flex;align-items:center;gap:20px;padding:clamp(22px,2.4vw,30px) 0">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,.35);flex-shrink:0">F—04</span>
+              <span style="flex:1;font-size:clamp(18px,2vw,24px);font-weight:500;letter-spacing:-.01em">Можно ли доверять ИИ корпоративные данные?</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:22px;flex-shrink:0;transition:transform .4s cubic-bezier(.16,.8,.3,1);{{ faq.s3 }}">+</span>
+            </button>
+            <div style="display:grid;transition:grid-template-rows .55s cubic-bezier(.16,.8,.3,1),opacity .4s ease;{{ faq.p3 }}"><div style="overflow:hidden"><div style="padding:0 0 30px 49px;max-width:74ch;color:rgba(255,255,255,.6);font-size:16px;line-height:1.6">
+              <p>Да — и мы закладываем требования о безопасности с первого дня. При необходимости внедряем AI-роутер, который разделяет чувствительные и обезличенные данные. Конфиденциальная информация остаётся у вас, а обезличенные части запроса направляются во внешние сервисы (ChatGPT, Claude, Gemini) для максимально качественной обработки.</p>
+            </div></div></div>
+          </div>
+
+          <div style="border-bottom:1px solid rgba(255,255,255,.14)">
+            <button onClick="{{ tFaq4 }}" style="width:100%;background:none;border:none;cursor:pointer;color:#fff;text-align:left;display:flex;align-items:center;gap:20px;padding:clamp(22px,2.4vw,30px) 0">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,.35);flex-shrink:0">F—05</span>
+              <span style="flex:1;font-size:clamp(18px,2vw,24px);font-weight:500;letter-spacing:-.01em">Что, если зарубежные ИИ-сервисы ограничат в РФ?</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:22px;flex-shrink:0;transition:transform .4s cubic-bezier(.16,.8,.3,1);{{ faq.s4 }}">+</span>
+            </button>
+            <div style="display:grid;transition:grid-template-rows .55s cubic-bezier(.16,.8,.3,1),opacity .4s ease;{{ faq.p4 }}"><div style="overflow:hidden"><div style="padding:0 0 30px 49px;max-width:74ch;color:rgba(255,255,255,.6);font-size:16px;line-height:1.6">
+              <p>Для таких случаев мы подключаем запасную модель (российскую или развёрнутую на вашем сервере), чтобы при потере соединения работа не прекратилась.</p>
+            </div></div></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============ ПРЕД-CTA ============ -->
+      <section style="max-width:1280px;margin:0 auto;padding:clamp(60px,9vw,140px) clamp(20px,4vw,48px);text-align:center">
+        <p data-reveal="" style="font-size: clamp(28px,4.6vw,62px); font-weight: 300; line-height: 1.22; letter-spacing: -.02em; max-width: 20ch; margin: 0 auto; width: 864px; height: 189px">Вопрос уже не в том, <span style="color:rgba(255,255,255,.4)">нужен ли ИИ</span>, а в том, как внедрить его <span style="border-bottom:2px solid var(--acc,#fff);padding-bottom:2px">правильно</span></p>
+      </section>
+
+      <!-- ============ ФИНАЛЬНЫЙ CTA / ФОРМА ============ -->
+      <section id="av-form" style="border-top:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,#0A0A0A,#070707)">
+        <div style="max-width:1280px;margin:0 auto;padding:clamp(60px,9vw,130px) clamp(20px,4vw,48px);display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(40px,6vw,90px);align-items:start">
+          <div>
+            <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:26px">06 / ЗАЯВКА</div>
+            <h2 data-reveal="" data-d="1" style="font-size:clamp(36px,5.2vw,76px);font-weight:700;letter-spacing:-.03em;line-height:.98">БЕСПЛАТНЫЙ АУДИТ</h2>
+            <p data-reveal="" data-d="2" style="margin-top:26px;color:rgba(255,255,255,.55);font-size:17px;line-height:1.55;max-width:34ch">Расскажите о задаче — вернёмся с картой потерь и приоритетами автоматизации.</p>
+          </div>
+          <div data-reveal="" data-d="1">
+            <sc-if value="{{ sent }}">
+              <div style="border:1px solid rgba(255,255,255,.2);padding:48px 40px;min-height:300px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start">
+                <span style="width:46px;height:46px;border:1.5px solid var(--acc,#fff);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:22px;margin-bottom:24px">✓</span>
+                <h3 style="font-size:28px;font-weight:600;margin-bottom:12px">Заявка отправлена</h3>
+                <p style="color:rgba(255,255,255,.55);font-size:16px;line-height:1.55;max-width:40ch">Мы свяжемся с вами в ближайшее время. Это демонстрационная форма — данные не передаются.</p>
+              </div>
+            </sc-if>
+            <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+            <form onSubmit="{{ onSubmit }}" style="display:grid;gap:30px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px">
+                <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">ВАШЕ ИМЯ *</span><input required="" type="text" placeholder="Иван" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-size:17px;padding:9px 0;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"></label>
+                <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">ВАША ДОЛЖНОСТЬ</span><input type="text" placeholder="CEO / COO" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-size:17px;padding:9px 0;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"></label>
+              </div>
+              <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">ЧТО ХОТИТЕ УЛУЧШИТЬ?</span>
+                <select style="width:100%;background:#0A0A0A;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:17px;padding:9px 0;cursor:pointer;transition:border-color .3s" style-focus="border-bottom:1px solid #fff">
+                  <option>Коммуникацию с клиентами</option><option>Скорость внутренних процессов</option><option>Работу с документами</option><option>Обработку данных</option><option>Аналитику и прогнозирование</option><option>Другое</option>
+                </select>
+              </label>
+              <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">БЮДЖЕТ</span>
+                <select style="width:100%;background:#0A0A0A;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:17px;padding:9px 0;cursor:pointer;transition:border-color .3s" style-focus="border-bottom:1px solid #fff">
+                  <option>До 100 000 ₽</option><option>100 000 – 300 000 ₽</option><option>300 000 ₽ – 1 000 000 ₽</option><option>Более 1 000 000 ₽</option>
+                </select>
+              </label>
+              <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">КРАТКО ОПИШИТЕ ЗАДАЧУ *</span><textarea required="" rows="3" placeholder="Что хотите автоматизировать и почему" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-size:17px;padding:9px 0;resize:vertical;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"></textarea></label>
+              <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">КОНТАКТ ДЛЯ СВЯЗИ *</span><input required="" type="text" placeholder="@username или +7 …" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-size:17px;padding:9px 0;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"></label>
+              <div style="display:grid;gap:14px;margin-top:4px">
+                <label style="display:flex;gap:13px;align-items:flex-start;cursor:pointer;color:rgba(255,255,255,.55);font-size:13.5px;line-height:1.45"><input required="" type="checkbox" style="margin-top:2px;width:16px;height:16px;accent-color:#fff;flex-shrink:0"><span>Я ознакомился(-ась) с Политикой обработки персональных данных.</span></label>
+                <label style="display:flex;gap:13px;align-items:flex-start;cursor:pointer;color:rgba(255,255,255,.55);font-size:13.5px;line-height:1.45"><input required="" type="checkbox" style="margin-top:2px;width:16px;height:16px;accent-color:#fff;flex-shrink:0"><span>Даю согласие на обработку моих персональных данных в соответствии с текстом согласия.</span></label>
+              </div>
+              <button type="submit" style="background:#fff;color:#0A0A0A;border:none;cursor:pointer;font-weight:600;font-size:15px;padding:18px 32px;justify-self:start;display:flex;align-items:center;gap:12px;transition:all .3s" style-hover="background:rgba(255,255,255,.85);transform:translateY(-2px)">Отправить заявку<span style="font-family:'JetBrains Mono',monospace">→</span></button>
+            </form>
+            </sc-if>
+          </div>
+        </div>
+      </section>
+
+      <footer style="border-top:1px solid rgba(255,255,255,.1)">
+        <div style="max-width:1280px;margin:0 auto;padding:48px clamp(20px,4vw,48px);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px">
+          <div style="display:flex;align-items:center;gap:11px"><span style="width:10px;height:10px;border:1.5px solid #fff;display:inline-block;transform:rotate(45deg)"></span><span style="font-weight:700;letter-spacing:.34em;font-size:14px;padding-left:3px">AIVION</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,.4);letter-spacing:.05em">© 2026 AIVION · AI ENGINEERING</div>
+        </div>
+      </footer>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isCon }}">
+    <div>
+      <!-- ===== HERO ===== -->
+      <header style="position:relative;min-height:90vh;display:flex;flex-direction:column;justify-content:center;padding:150px clamp(20px,4vw,48px) 90px;overflow:hidden">
+        <canvas id="av-canvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0"></canvas>
+        <svg viewBox="0 0 600 600" style="position:absolute;top:50%;right:-4%;transform:translateY(-50%);width:min(60vw,640px);height:min(60vw,640px);z-index:1;pointer-events:none;opacity:.5" aria-hidden="true">
+          <g style="transform-origin:300px 300px;animation:av-spin 70s linear infinite">
+            <circle cx="300" cy="300" r="250" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1" stroke-dasharray="1 12"></circle>
+            <circle cx="300" cy="300" r="180" fill="none" stroke="var(--accDim,rgba(255,255,255,.1))" stroke-width="1"></circle>
+          </g>
+          <line x1="40" y1="300" x2="560" y2="300" stroke="rgba(255,255,255,.05)" stroke-width="1"></line>
+          <line x1="300" y1="40" x2="300" y2="560" stroke="rgba(255,255,255,.05)" stroke-width="1"></line>
+          <circle cx="300" cy="300" r="110" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1" stroke-dasharray="6 6" style="transform-origin:300px 300px;animation:av-spin-rev 44s linear infinite"></circle>
+        </svg>
+        <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(80% 60% at 40% 45%,transparent 40%,rgba(10,10,10,.55) 100%)"></div>
+        <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.32em;color:rgba(255,255,255,.5);margin-bottom:34px;display:flex;align-items:center;gap:14px"><span style="width:30px;height:1px;background:var(--accSoft,rgba(255,255,255,.4))"></span>02 / ИИ-КОНСАЛТИНГ</div>
+          <h1 style="font-size:clamp(44px,8vw,108px);font-weight:700;line-height:.97;letter-spacing:-.03em;max-width:13ch">Консалтинг в области&nbsp;AI</h1>
+          <p style="margin-top:32px;font-size:clamp(18px,2vw,24px);line-height:1.5;color:rgba(255,255,255,.62);max-width:44ch">Подсказываем, какие задачи можно автоматизировать и с помощью каких инструментов</p>
+          <button onClick="{{ goForm }}" style="margin-top:44px;background:#fff;color:#0A0A0A;border:none;cursor:pointer;font-weight:600;font-size:15px;padding:17px 32px;display:flex;align-items:center;gap:12px;transition:all .3s" style-hover="background:rgba(255,255,255,.85);transform:translateY(-2px)">Начать с консультации<span style="font-family:'JetBrains Mono',monospace">→</span></button>
+        </div>
+      </header>
+
+      <!-- ===== ИЗ ЧЕГО СОСТОИТ ===== -->
+      <section style="max-width:1280px;margin:0 auto;padding:clamp(80px,11vw,150px) clamp(20px,4vw,48px) clamp(40px,6vw,80px)">
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:22px">01 / СОСТАВ</div>
+        <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(36px,4.5vw,56px)">Из чего состоит консалтинг</h2>
+        <div data-reveal="" data-d="1" style="display:flex;gap:clamp(16px,2vw,26px);align-items:stretch;min-height:300px;overflow:hidden">
+          <div class="av-xcard" style="{{ con.c0 }}position:relative;border:1px solid rgba(255,255,255,.13);padding:clamp(28px,3.2vw,46px);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;min-width:0">
+            <div style="position:absolute;top:0;left:0;height:2px;width:100%;background:var(--acc,#fff);transform:scaleX({{ con.s0bar }});transform-origin:left;transition:transform .5s"></div>
+            <button onClick="{{ tCon0 }}" style="background:none;border:none;color:#fff;cursor:pointer;text-align:left;width:100%;display:flex;justify-content:space-between;align-items:flex-start;gap:18px">
+              <span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accDim,rgba(255,255,255,.4))">[ A—01 ]</span><h3 style="font-size:clamp(26px,3vw,40px);font-weight:700;letter-spacing:-.02em;margin-top:18px">Формирование стратегии</h3></span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:24px;flex-shrink:0;transition:transform .4s;{{ con.s0 }}">+</span>
+            </button>
+            <div style="display:grid;transition:grid-template-rows .55s cubic-bezier(.16,.8,.3,1),opacity .4s;{{ con.b0 }}"><div style="overflow:hidden"><p style="padding-top:26px;font-size:clamp(18px,2vw,23px);line-height:1.5;color:rgba(255,255,255,.62);max-width:40ch">Приоритизация задач: что дешевле, что нужно как можно быстрее.</p></div></div>
+          </div>
+          <div class="av-xcard" style="{{ con.c1 }}position:relative;border:1px solid rgba(255,255,255,.13);padding:clamp(28px,3.2vw,46px);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;min-width:0">
+            <div style="position:absolute;top:0;left:0;height:2px;width:100%;background:var(--acc,#fff);transform:scaleX({{ con.s1bar }});transform-origin:left;transition:transform .5s"></div>
+            <button onClick="{{ tCon1 }}" style="background:none;border:none;color:#fff;cursor:pointer;text-align:left;width:100%;display:flex;justify-content:space-between;align-items:flex-start;gap:18px">
+              <span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accDim,rgba(255,255,255,.4))">[ A—02 ]</span><h3 style="font-size:clamp(26px,3vw,40px);font-weight:700;letter-spacing:-.02em;margin-top:18px">AI-инженерия под P&amp;L</h3></span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:24px;flex-shrink:0;transition:transform .4s;{{ con.s1 }}">+</span>
+            </button>
+            <div style="display:grid;transition:grid-template-rows .55s cubic-bezier(.16,.8,.3,1),opacity .4s;{{ con.b1 }}"><div style="overflow:hidden"><p style="padding-top:26px;font-size:clamp(18px,2vw,23px);line-height:1.5;color:rgba(255,255,255,.62);max-width:40ch">Какую модель взять, как развернуть, какие задачи лучше решит скрипт.</p></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== СЛОЖНОСТЬ С AI В РФ ===== -->
+      <section style="max-width:1280px;margin:0 auto;padding:clamp(40px,6vw,90px) clamp(20px,4vw,48px) clamp(80px,11vw,140px)">
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:22px">02 / КОНТЕКСТ</div>
+        <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(40px,5vw,64px);max-width:18ch">В чём сложность с AI внутри РФ</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,2.4vw,30px);margin-bottom:clamp(30px,4vw,48px)">
+          <div data-reveal="" style="border-top:1px solid rgba(255,255,255,.18);padding-top:26px">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px"><span style="width:7px;height:7px;background:var(--acc,#fff);border-radius:50%;animation:av-blip 3s ease-in-out infinite"></span><h3 style="font-size:clamp(20px,2.2vw,26px);font-weight:600">Российские модели</h3></div>
+            <p style="color:rgba(255,255,255,.58);font-size:16.5px;line-height:1.55;max-width:42ch">Быстро растут (Yandex, Sber), но часто не тянут сложную бизнес-логику и глубокую аналитику.</p>
+          </div>
+          <div data-reveal="" data-d="1" style="border-top:1px solid rgba(255,255,255,.18);padding-top:26px">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px"><span style="width:7px;height:7px;border:1.5px solid rgba(255,255,255,.5);border-radius:50%"></span><h3 style="font-size:clamp(20px,2.2vw,26px);font-weight:600">Зарубежные модели</h3></div>
+            <p style="color:rgba(255,255,255,.58);font-size:16.5px;line-height:1.55;max-width:42ch">Закрыты санкциями (OpenAI, Claude): оплата в валюте затруднена, доступ через VPN нестабилен, риск блокировки аккаунта в любой момент.</p>
+          </div>
+        </div>
+        <div data-reveal="" style="border-left:1px solid var(--accDim,rgba(255,255,255,.25));padding:6px 0 6px clamp(22px,3vw,40px);max-width:80ch;margin-bottom:clamp(40px,5vw,64px)">
+          <p style="color:rgba(255,255,255,.6);font-size:clamp(16px,1.7vw,19px);line-height:1.6">Помимо этого, отправить во внешнюю модель договор, выгрузку из CRM или акт — значит вынести персональные данные клиентов и контрагентов за пределы компании. Это уже зона <span class="av-acc" style="font-family:'JetBrains Mono',monospace">152-ФЗ</span>: трансграничная передача требует правовых оснований, уведомления Роскомнадзора и оценки получателя данных.</p>
+        </div>
+        <p data-reveal="" style="font-size:clamp(22px,2.8vw,36px);font-weight:300;line-height:1.4;letter-spacing:-.01em;max-width:24ch">Мы учитываем все детали этих подходов, считаем стоимость под вашу задачу и говорим прямо: <span style="color:#fff">что брать, как разворачивать и для чего использовать</span>, а от чего отказаться.</p>
+      </section>
+
+      <!-- ===== КОМУ ПОДХОДИТ ===== -->
+      <section style="max-width:1280px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(80px,11vw,140px)">
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:22px">03 / КОМУ ПОДХОДИТ</div>
+        <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(36px,4.5vw,56px)">Вам сюда, если</h2>
+        <div style="border-top:1px solid rgba(255,255,255,.13)">
+          <div data-reveal="" style="display:grid;grid-template-columns:64px 1fr;gap:clamp(16px,3vw,40px);align-items:center;padding:clamp(22px,2.6vw,34px) 0;border-bottom:1px solid rgba(255,255,255,.13);transition:padding-left .4s" style-hover="padding-left:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accDim,rgba(255,255,255,.4))">01</span><p style="font-size:clamp(17px,1.9vw,22px);line-height:1.45;color:rgba(255,255,255,.82);max-width:60ch">Вы присматриваетесь к ИИ, но не понимаете, с чего начать и где реальная польза.</p></div>
+          <div data-reveal="" data-d="1" style="display:grid;grid-template-columns:64px 1fr;gap:clamp(16px,3vw,40px);align-items:center;padding:clamp(22px,2.6vw,34px) 0;border-bottom:1px solid rgba(255,255,255,.13);transition:padding-left .4s" style-hover="padding-left:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accDim,rgba(255,255,255,.4))">02</span><p style="font-size:clamp(17px,1.9vw,22px);line-height:1.45;color:rgba(255,255,255,.82);max-width:60ch">Команда хочет внедрить LLM, но боится нарушить 152-ФЗ.</p></div>
+          <div data-reveal="" data-d="2" style="display:grid;grid-template-columns:64px 1fr;gap:clamp(16px,3vw,40px);align-items:center;padding:clamp(22px,2.6vw,34px) 0;border-bottom:1px solid rgba(255,255,255,.13);transition:padding-left .4s" style-hover="padding-left:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accDim,rgba(255,255,255,.4))">03</span><p style="font-size:clamp(17px,1.9vw,22px);line-height:1.45;color:rgba(255,255,255,.82);max-width:60ch">Есть черновое ТЗ — но непонятно, реалистично ли оно и не переплачиваете ли вы.</p></div>
+          <div data-reveal="" data-d="3" style="display:grid;grid-template-columns:64px 1fr;gap:clamp(16px,3vw,40px);align-items:center;padding:clamp(22px,2.6vw,34px) 0;border-bottom:1px solid rgba(255,255,255,.13);transition:padding-left .4s" style-hover="padding-left:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accDim,rgba(255,255,255,.4))">04</span><p style="font-size:clamp(17px,1.9vw,22px);line-height:1.45;color:rgba(255,255,255,.82);max-width:60ch">Видели прайсы крупных интеграторов (от 10 млн) и ищете тех, кто говорит на языке вашего бизнеса.</p></div>
+        </div>
+      </section>
+
+      <!-- ===== ЧТО ВКЛЮЧАЕТ (ДОРОЖНАЯ КАРТА) ===== -->
+      <section style="max-width:1280px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(80px,11vw,140px)">
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:22px">04 / ДОРОЖНАЯ КАРТА</div>
+        <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(44px,5.5vw,72px)">Что включает консалтинг</h2>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,2vw,28px)">
+          <div data-reveal="" style="border-top:1px solid rgba(255,255,255,.22);padding-top:24px"><div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:500;margin-bottom:24px">01</div><h3 style="font-size:20px;font-weight:600;margin-bottom:14px">Погружаемся в бизнес</h3><p style="color:rgba(255,255,255,.5);font-size:14.5px;line-height:1.55">После заявки готовим индивидуальный опросник и собираем информацию о ваших процессах, команде и текущих инструментах. Это позволяет понять, как устроена работа сейчас и к каким задачам стоит применять автоматизацию.</p></div>
+          <div data-reveal="" data-d="1" style="border-top:1px solid rgba(255,255,255,.22);padding-top:24px"><div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:500;margin-bottom:24px">02</div><h3 style="font-size:20px;font-weight:600;margin-bottom:14px">Разбираем процессы</h3><p style="color:rgba(255,255,255,.5);font-size:14.5px;line-height:1.55">Созваниваемся и вместе разбираем ключевые процессы: обработку заявок, документооборот, аналитику. Определяем, где сотрудники тратят больше всего времени, где возникают ошибки и какие задачи можно ускорить дешевле всего.</p></div>
+          <div data-reveal="" data-d="2" style="border-top:1px solid rgba(255,255,255,.22);padding-top:24px"><div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:500;margin-bottom:24px">03</div><h3 style="font-size:20px;font-weight:600;margin-bottom:14px">Считаем экономику</h3><p style="color:rgba(255,255,255,.5);font-size:14.5px;line-height:1.55">Оцениваем объём работ, стоимость внедрения и дальнейшей поддержки. На основе ваших текущих показателей рассчитываем потенциальную экономию времени и ресурсов, чтобы понять сроки окупаемости.</p></div>
+          <div data-reveal="" data-d="3" style="border-top:1px solid rgba(255,255,255,.22);padding-top:24px"><div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:500;margin-bottom:24px">04</div><h3 style="font-size:20px;font-weight:600;margin-bottom:14px">Презентуем отчёт</h3><p style="color:rgba(255,255,255,.5);font-size:14.5px;line-height:1.55">Показываем, какие процессы стоит автоматизировать в первую очередь, какие решения для этого подойдут, сколько займёт по времени, во что обойдётся и какого результата можно ожидать.</p></div>
+        </div>
+      </section>
+
+      <!-- ===== ЧТО ВЫ ПОЛУЧАЕТЕ ===== -->
+      <section style="max-width:1280px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(80px,11vw,140px)">
+        <div style="display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(36px,6vw,90px);align-items:start">
+          <div>
+            <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:22px">05 / РЕЗУЛЬТАТ</div>
+            <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:24px">Что вы получаете</h2>
+            <p data-reveal="" data-d="2" style="color:rgba(255,255,255,.55);font-size:17px;line-height:1.55;max-width:32ch">Полный отчёт по тому, как использовать ИИ в своей работе.</p>
+          </div>
+          <div data-reveal="" data-d="1" style="border-top:1px solid rgba(255,255,255,.13)">
+            <div style="padding:clamp(20px,2.4vw,28px) 0;border-bottom:1px solid rgba(255,255,255,.1)"><h3 style="font-size:clamp(19px,2vw,23px);font-weight:600;margin-bottom:8px;display:flex;gap:14px"><span class="av-acc" style="font-family:'JetBrains Mono',monospace;font-size:14px">01</span>Карта процессов и потерь</h3><p style="color:rgba(255,255,255,.55);font-size:15.5px;line-height:1.55;padding-left:28px">Где и сколько денег и времени утекает в рутину.</p></div>
+            <div style="padding:clamp(20px,2.4vw,28px) 0;border-bottom:1px solid rgba(255,255,255,.1)"><h3 style="font-size:clamp(19px,2vw,23px);font-weight:600;margin-bottom:8px;display:flex;gap:14px"><span class="av-acc" style="font-family:'JetBrains Mono',monospace;font-size:14px">02</span>Приоритизация по ROI</h3><p style="color:rgba(255,255,255,.55);font-size:15.5px;line-height:1.55;padding-left:28px">Какие процессы автоматизировать первыми, чтобы окупиться быстрее.</p></div>
+            <div style="padding:clamp(20px,2.4vw,28px) 0;border-bottom:1px solid rgba(255,255,255,.1)"><h3 style="font-size:clamp(19px,2vw,23px);font-weight:600;margin-bottom:8px;display:flex;gap:14px"><span class="av-acc" style="font-family:'JetBrains Mono',monospace;font-size:14px">03</span>Дорожная карта внедрения</h3><p style="color:rgba(255,255,255,.55);font-size:15.5px;line-height:1.55;padding-left:28px">Что, в каком порядке, с какими сроками и бюджетом.</p></div>
+            <div style="padding:clamp(20px,2.4vw,28px) 0;border-bottom:1px solid rgba(255,255,255,.1)"><h3 style="font-size:clamp(19px,2vw,23px);font-weight:600;margin-bottom:8px;display:flex;gap:14px"><span class="av-acc" style="font-family:'JetBrains Mono',monospace;font-size:14px">04</span>Оценка архитектуры</h3><p style="color:rgba(255,255,255,.55);font-size:15.5px;line-height:1.55;padding-left:28px">Что можно отдавать в облачные модели, что — только в закрытый контур, и где у вас сейчас риск.</p></div>
+            <div style="padding:clamp(20px,2.4vw,28px) 0;border-bottom:1px solid rgba(255,255,255,.1)"><h3 style="font-size:clamp(19px,2vw,23px);font-weight:600;margin-bottom:8px;display:flex;gap:14px"><span class="av-acc" style="font-family:'JetBrains Mono',monospace;font-size:14px">05</span>Честный вердикт</h3><p style="color:rgba(255,255,255,.55);font-size:15.5px;line-height:1.55;padding-left:28px">Если ИИ вам пока не нужен — мы скажем это прямо.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ROI ===== -->
+      <section style="border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,#0A0A0A,#060606);position:relative;overflow:hidden">
+        <div style="position:absolute;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(100% 80% at 70% 40%,#000,transparent);-webkit-mask-image:radial-gradient(100% 80% at 70% 40%,#000,transparent)"></div>
+        <div style="position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:clamp(80px,11vw,150px) clamp(20px,4vw,48px)">
+          <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:22px">06 / ЭКОНОМИКА</div>
+          <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:14px">Как считаем ROI</h2>
+          <p data-reveal="" data-d="2" style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.06em;color:var(--accDim,rgba(255,255,255,.45));margin-bottom:clamp(40px,5vw,64px)">ПРИМЕР — ЧАСТНАЯ СТОМАТОЛОГИЯ</p>
+          <div style="display:grid;grid-template-columns:.78fr 1.22fr;gap:clamp(24px,3.5vw,56px);align-items:start">
+
+            <div data-reveal="" style="border:1px solid rgba(255,255,255,.13);padding:clamp(24px,2.6vw,36px)">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;color:rgba(255,255,255,.4);margin-bottom:22px">ВХОДНЫЕ ДАННЫЕ</div>
+              <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span style="color:rgba(255,255,255,.6);font-size:15px">Администраторы</span><span style="font-family:'JetBrains Mono',monospace;color:#fff">4</span></div>
+              <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span style="color:rgba(255,255,255,.6);font-size:15px">Заявок в день</span><span style="font-family:'JetBrains Mono',monospace;color:#fff">80</span></div>
+              <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span style="color:rgba(255,255,255,.6);font-size:15px">Средний чек</span><span style="font-family:'JetBrains Mono',monospace;color:#fff">15 000 ₽</span></div>
+              <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span style="color:rgba(255,255,255,.6);font-size:15px">Маржинальность</span><span style="font-family:'JetBrains Mono',monospace;color:#fff">20%</span></div>
+              <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span style="color:rgba(255,255,255,.6);font-size:15px">Отвечают позже 15 мин</span><span style="font-family:'JetBrains Mono',monospace;color:#fff">25%</span></div>
+              <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0"><span style="color:rgba(255,255,255,.6);font-size:15px">Из них уходят</span><span style="font-family:'JetBrains Mono',monospace;color:#fff">30%</span></div>
+              <div style="margin-top:26px;border-top:1px solid rgba(255,255,255,.13);padding-top:22px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;color:rgba(255,255,255,.4);margin-bottom:16px">РАСХОДЫ</div>
+                <div style="display:flex;justify-content:space-between;gap:14px;padding:9px 0"><span style="color:rgba(255,255,255,.6);font-size:14.5px">Внедрение</span><span style="font-family:'JetBrains Mono',monospace;color:#fff">90 000 ₽</span></div>
+                <div style="display:flex;justify-content:space-between;gap:14px;padding:9px 0"><span style="color:rgba(255,255,255,.6);font-size:14.5px">Поддержка / мес</span><span style="font-family:'JetBrains Mono',monospace;color:#fff">20 000 ₽</span></div>
+                <div style="display:flex;justify-content:space-between;gap:14px;padding:9px 0"><span style="color:rgba(255,255,255,.6);font-size:14.5px">Токены / мес</span><span style="font-family:'JetBrains Mono',monospace;color:#fff">6 000 ₽</span></div>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:0">
+              <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;color:rgba(255,255,255,.4);margin-bottom:20px">РАСЧЁТ</div>
+              <div data-reveal="" style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:16px 0;border-top:1px solid rgba(255,255,255,.1)"><span style="font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.45);font-size:14.5px;flex:1;min-width:220px">80 × 25% × 30%</span><span style="font-family:'JetBrains Mono',monospace;font-size:clamp(22px,2.4vw,30px);color:#fff">= 6</span><span style="color:rgba(255,255,255,.45);font-size:13.5px">потерянных заявок / день</span></div>
+              <div data-reveal="" data-d="1" style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:16px 0;border-top:1px solid rgba(255,255,255,.1)"><span style="font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.45);font-size:14.5px;flex:1;min-width:220px">6 × 20% <span style="opacity:.5">(конверсия в запись)</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:clamp(22px,2.4vw,30px);color:#fff">= 1,2</span><span style="color:rgba(255,255,255,.45);font-size:13.5px">пациента / день</span></div>
+              <div data-reveal="" data-d="2" style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:16px 0;border-top:1px solid rgba(255,255,255,.1)"><span style="font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.45);font-size:14.5px;flex:1;min-width:220px">1,2 × 50% × 30 дней</span><span style="font-family:'JetBrains Mono',monospace;font-size:clamp(22px,2.4vw,30px);color:#fff">= 18</span><span style="color:rgba(255,255,255,.45);font-size:13.5px">клиентов / месяц</span></div>
+              <div data-reveal="" data-d="3" style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:16px 0;border-top:1px solid rgba(255,255,255,.1)"><span style="font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.45);font-size:14.5px;flex:1;min-width:220px">18 × 15 000 ₽</span><span class="av-acc" style="font-family:'JetBrains Mono',monospace;font-size:clamp(22px,2.4vw,30px)">= <span data-count="" data-target="270000" data-group="1" data-suffix=" ₽">270 000 ₽</span></span><span style="color:rgba(255,255,255,.45);font-size:13.5px">выручки / месяц</span></div>
+              <div data-reveal="" data-d="3" style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:16px 0;border-top:1px solid rgba(255,255,255,.1)"><span style="font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.45);font-size:14.5px;flex:1;min-width:220px">270 000 × 20% <span style="opacity:.5">(маржа)</span></span><span class="av-acc" style="font-family:'JetBrains Mono',monospace;font-size:clamp(22px,2.4vw,30px)">= <span data-count="" data-target="54000" data-group="1" data-suffix=" ₽">54 000 ₽</span></span><span style="color:rgba(255,255,255,.45);font-size:13.5px">прибыли / месяц</span></div>
+              <div data-reveal="" data-d="3" style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:16px 0;border-top:1px solid rgba(255,255,255,.1)"><span style="font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.45);font-size:14.5px;flex:1;min-width:220px">54 000 − 26 000 <span style="opacity:.5">(расходы)</span></span><span class="av-acc" style="font-family:'JetBrains Mono',monospace;font-size:clamp(22px,2.4vw,30px)">= <span data-count="" data-target="28000" data-group="1" data-suffix=" ₽">28 000 ₽</span></span><span style="color:rgba(255,255,255,.45);font-size:13.5px">чистыми / месяц</span></div>
+
+              <div data-reveal="" style="margin-top:28px;border:1px solid var(--accDim,rgba(255,255,255,.3));padding:clamp(24px,3vw,38px);display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap">
+                <div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;color:rgba(255,255,255,.45);margin-bottom:10px">ОКУПАЕМОСТЬ · 90 000 / 28 000</div><div style="color:rgba(255,255,255,.55);font-size:14.5px;max-width:30ch">Срок возврата вложений в проект</div></div>
+                <div style="text-align:right"><div style="font-size:clamp(44px,6vw,76px);font-weight:700;letter-spacing:-.03em;line-height:1" class="av-acc"><span data-count="" data-target="3.2" data-decimals="1">3,2</span></div><div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,.45);margin-top:6px">МЕСЯЦА</div></div>
+              </div>
+            </div>
+          </div>
+          <p data-reveal="" style="margin-top:clamp(40px,5vw,64px);font-size:clamp(20px,2.4vw,30px);font-weight:300;line-height:1.4;letter-spacing:-.01em;max-width:32ch">Если на этой арифметике проект не сходится — мы за него не берёмся. Наша цель не продать, а <span style="color:#fff">разобраться и дать пользу</span>.</p>
+        </div>
+      </section>
+
+      <!-- ===== CTA / ФОРМА ===== -->
+      <section id="av-form" style="background:linear-gradient(180deg,#0A0A0A,#070707)">
+        <div style="max-width:1280px;margin:0 auto;padding:clamp(60px,9vw,130px) clamp(20px,4vw,48px);display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(40px,6vw,90px);align-items:start">
+          <div>
+            <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:26px">07 / ЗАЯВКА</div>
+            <h2 data-reveal="" data-d="1" style="font-size:clamp(34px,5vw,72px);font-weight:700;letter-spacing:-.03em;line-height:.98">Начните с консультации</h2>
+            <p data-reveal="" data-d="2" style="margin-top:26px;color:rgba(255,255,255,.55);font-size:17px;line-height:1.55;max-width:36ch">Получите карту потерь, варианты автоматизаций и стратегию внедрения — даже если решите не работать с нами.</p>
+          </div>
+          <div data-reveal="" data-d="1">
+            <sc-if value="{{ sent }}">
+              <div style="border:1px solid rgba(255,255,255,.2);padding:48px 40px;min-height:300px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start">
+                <span style="width:46px;height:46px;border:1.5px solid var(--acc,#fff);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:22px;margin-bottom:24px;color:var(--acc,#fff)">✓</span>
+                <h3 style="font-size:28px;font-weight:600;margin-bottom:12px">Заявка отправлена</h3>
+                <p style="color:rgba(255,255,255,.55);font-size:16px;line-height:1.55;max-width:40ch">Мы свяжемся с вами в ближайшее время. Это демонстрационная форма — данные не передаются.</p>
+              </div>
+            </sc-if>
+            <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+            <form onSubmit="{{ onSubmit }}" style="display:grid;gap:30px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px">
+                <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">ВАШЕ ИМЯ *</span><input required="" type="text" placeholder="Иван" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-size:17px;padding:9px 0;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"></label>
+                <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">ВАША ДОЛЖНОСТЬ</span><input type="text" placeholder="CEO / COO" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-size:17px;padding:9px 0;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"></label>
+              </div>
+              <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">ЧТО ХОТИТЕ УЛУЧШИТЬ?</span>
+                <select style="width:100%;background:#0A0A0A;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:17px;padding:9px 0;cursor:pointer;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"><option>Коммуникацию с клиентами</option><option>Скорость внутренних процессов</option><option>Работу с документами</option><option>Обработку данных</option><option>Аналитику и прогнозирование</option><option>Другое</option></select>
+              </label>
+              <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">БЮДЖЕТ</span>
+                <select style="width:100%;background:#0A0A0A;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:17px;padding:9px 0;cursor:pointer;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"><option>До 100 000 ₽</option><option>100 000 – 300 000 ₽</option><option>300 000 ₽ – 1 000 000 ₽</option><option>Более 1 000 000 ₽</option></select>
+              </label>
+              <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">КРАТКО ОПИШИТЕ ЗАДАЧУ *</span><textarea required="" rows="3" placeholder="Что хотите автоматизировать и почему" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-size:17px;padding:9px 0;resize:vertical;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"></textarea></label>
+              <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">КОНТАКТ ДЛЯ СВЯЗИ *</span><input required="" type="text" placeholder="@username или +7 …" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-size:17px;padding:9px 0;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"></label>
+              <div style="display:grid;gap:14px;margin-top:4px">
+                <label style="display:flex;gap:13px;align-items:flex-start;cursor:pointer;color:rgba(255,255,255,.55);font-size:13.5px;line-height:1.45"><input required="" type="checkbox" style="margin-top:2px;width:16px;height:16px;accent-color:#fff;flex-shrink:0"><span>Я ознакомился(-ась) с Политикой обработки персональных данных.</span></label>
+                <label style="display:flex;gap:13px;align-items:flex-start;cursor:pointer;color:rgba(255,255,255,.55);font-size:13.5px;line-height:1.45"><input required="" type="checkbox" style="margin-top:2px;width:16px;height:16px;accent-color:#fff;flex-shrink:0"><span>Даю согласие на обработку моих персональных данных в соответствии с текстом согласия.</span></label>
+              </div>
+              <button type="submit" style="background:#fff;color:#0A0A0A;border:none;cursor:pointer;font-weight:600;font-size:15px;padding:18px 32px;justify-self:start;display:flex;align-items:center;gap:12px;transition:all .3s" style-hover="background:rgba(255,255,255,.85);transform:translateY(-2px)">Отправить заявку<span style="font-family:'JetBrains Mono',monospace">→</span></button>
+            </form>
+            </sc-if>
+          </div>
+        </div>
+      </section>
+
+      <footer style="border-top:1px solid rgba(255,255,255,.1)">
+        <div style="max-width:1280px;margin:0 auto;padding:48px clamp(20px,4vw,48px);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px">
+          <div style="display:flex;align-items:center;gap:11px"><span style="width:10px;height:10px;border:1.5px solid #fff;display:inline-block;transform:rotate(45deg)"></span><span style="font-weight:700;letter-spacing:.34em;font-size:14px;padding-left:3px">AIVION</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,.4);letter-spacing:.05em">© 2026 AIVION · AI ENGINEERING</div>
+        </div>
+      </footer>
+    </div>
+    </sc-if>
+    <sc-if value="{{ isDev }}">
+    <div>
+      <!-- ===== HERO ===== -->
+      <header style="position:relative;min-height:90vh;display:flex;flex-direction:column;justify-content:center;padding:150px clamp(20px,4vw,48px) 90px;overflow:hidden">
+        <canvas id="av-canvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0"></canvas>
+        <svg viewBox="0 0 600 600" style="position:absolute;top:50%;right:-2%;transform:translateY(-50%);width:min(58vw,620px);height:min(58vw,620px);z-index:1;pointer-events:none;opacity:.45" aria-hidden="true">
+          <g style="transform-origin:300px 300px;animation:av-spin 120s linear infinite">
+            <polygon points="300,80 480,200 480,400 300,520 120,400 120,200" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1"></polygon>
+            <polygon points="300,160 410,225 410,375 300,440 190,375 190,225" fill="none" stroke="var(--accDim,rgba(255,255,255,.1))" stroke-width="1"></polygon>
+          </g>
+          <g stroke="rgba(255,255,255,.07)" stroke-width="1">
+            <line x1="300" y1="300" x2="300" y2="80"></line><line x1="300" y1="300" x2="480" y2="200"></line><line x1="300" y1="300" x2="480" y2="400"></line><line x1="300" y1="300" x2="300" y2="520"></line><line x1="300" y1="300" x2="120" y2="400"></line><line x1="300" y1="300" x2="120" y2="200"></line>
+          </g>
+          <circle cx="300" cy="300" r="5" fill="var(--accSoft,#fff)"></circle>
+        </svg>
+        <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(80% 60% at 40% 45%,transparent 40%,rgba(10,10,10,.55) 100%)"></div>
+        <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.32em;color:rgba(255,255,255,.5);margin-bottom:34px;display:flex;align-items:center;gap:14px"><span style="width:30px;height:1px;background:var(--accSoft,rgba(255,255,255,.4))"></span>03 / ИИ-РАЗРАБОТКА</div>
+          <h1 style="font-size:clamp(44px,8vw,108px);font-weight:700;line-height:.97;letter-spacing:-.03em;max-width:13ch">Разработка ИИ-систем</h1>
+          <p style="margin-top:32px;font-size:clamp(18px,2vw,24px);line-height:1.5;color:rgba(255,255,255,.62);max-width:48ch">Создаём ИИ-системы под ваши процессы: ассистенты, мультиагентные связки и кастомизация open-source моделей</p>
+          <button onClick="{{ goForm }}" style="margin-top:44px;background:#fff;color:#0A0A0A;border:none;cursor:pointer;font-weight:600;font-size:15px;padding:17px 32px;display:flex;align-items:center;gap:12px;transition:all .3s" style-hover="background:rgba(255,255,255,.85);transform:translateY(-2px)">Обсудить внедрение<span style="font-family:'JetBrains Mono',monospace">→</span></button>
+        </div>
+      </header>
+
+      <!-- ===== ПОЛНОЕ СОПРОВОЖДЕНИЕ ===== -->
+      <section style="max-width:1280px;margin:0 auto;padding:clamp(80px,11vw,150px) clamp(20px,4vw,48px) clamp(80px,11vw,140px)">
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:22px">01 / СОПРОВОЖДЕНИЕ</div>
+        <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(40px,5vw,64px);max-width:20ch">AI-проекты с полным сопровождением</h2>
+        <div style="border-top:1px solid rgba(255,255,255,.13)">
+          <div data-reveal="" class="av-sup" style="display:grid;grid-template-columns:90px 1fr 1.4fr;gap:clamp(18px,3vw,48px);align-items:start;padding:clamp(26px,3vw,40px) clamp(14px,2vw,28px) clamp(26px,3vw,40px) clamp(14px,2vw,24px);border-bottom:1px solid rgba(255,255,255,.13);transition:all .35s;cursor:default;border-color:rgba(255,255,255,.13)"><span class="av-sup-no" style="font-family:'JetBrains Mono',monospace;font-size:14px;color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.18);width:42px;height:42px;display:flex;align-items:center;justify-content:center;transition:all .35s">01</span><h3 style="font-size:clamp(20px,2.2vw,27px);font-weight:600;letter-spacing:-.01em">Разработка по этапам</h3><p style="color:rgba(255,255,255,.55);font-size:16px;line-height:1.55">Разбиваем проект на короткие спринты с фиксированными результатами. После каждого этапа показываем промежуточный результат и собираем обратную связь.</p></div>
+          <div data-reveal="" data-d="1" class="av-sup" style="display:grid;grid-template-columns:90px 1fr 1.4fr;gap:clamp(18px,3vw,48px);align-items:start;padding:clamp(26px,3vw,40px) clamp(14px,2vw,28px) clamp(26px,3vw,40px) clamp(14px,2vw,24px);border-bottom:1px solid rgba(255,255,255,.13);transition:all .35s;cursor:default;border-color:rgba(255,255,255,.13)"><span class="av-sup-no" style="font-family:'JetBrains Mono',monospace;font-size:14px;color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.18);width:42px;height:42px;display:flex;align-items:center;justify-content:center;transition:all .35s">02</span><h3 style="font-size:clamp(20px,2.2vw,27px);font-weight:600;letter-spacing:-.01em">Передача прав</h3><p style="color:rgba(255,255,255,.55);font-size:16px;line-height:1.55">Код, веса дообученных моделей и документация переходят к вам. Вендорство обсуждается индивидуально.</p></div>
+          <div data-reveal="" data-d="2" class="av-sup" style="display:grid;grid-template-columns:90px 1fr 1.4fr;gap:clamp(18px,3vw,48px);align-items:start;padding:clamp(26px,3vw,40px) clamp(14px,2vw,28px) clamp(26px,3vw,40px) clamp(14px,2vw,24px);border-bottom:1px solid rgba(255,255,255,.13);transition:all .35s;cursor:default;border-color:rgba(255,255,255,.13)"><span class="av-sup-no" style="font-family:'JetBrains Mono',monospace;font-size:14px;color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.18);width:42px;height:42px;display:flex;align-items:center;justify-content:center;transition:all .35s">03</span><h3 style="font-size:clamp(20px,2.2vw,27px);font-weight:600;letter-spacing:-.01em">Поддержка после окончания работ</h3><p style="color:rgba(255,255,255,.55);font-size:16px;line-height:1.55">После сдачи мониторим систему и исправляем ошибки, если они есть. Срок бесплатной поддержки фиксируется до начала работ.</p></div>
+          <div data-reveal="" data-d="3" class="av-sup" style="display:grid;grid-template-columns:90px 1fr 1.4fr;gap:clamp(18px,3vw,48px);align-items:start;padding:clamp(26px,3vw,40px) clamp(14px,2vw,28px) clamp(26px,3vw,40px) clamp(14px,2vw,24px);border-bottom:1px solid rgba(255,255,255,.13);transition:all .35s;cursor:default;border-color:rgba(255,255,255,.13)"><span class="av-sup-no" style="font-family:'JetBrains Mono',monospace;font-size:14px;color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.18);width:42px;height:42px;display:flex;align-items:center;justify-content:center;transition:all .35s">04</span><h3 style="font-size:clamp(20px,2.2vw,27px);font-weight:600;letter-spacing:-.01em">Интеграция с CRM и ERP</h3><p style="color:rgba(255,255,255,.55);font-size:16px;line-height:1.55">Подключаем ИИ к amoCRM, Bitrix24, 1С, МойСклад, телефонии (SIP) и другим платформам.</p></div>
+          <div data-reveal="" data-d="4" class="av-sup" style="display:grid;grid-template-columns:90px 1fr 1.4fr;gap:clamp(18px,3vw,48px);align-items:start;padding:clamp(26px,3vw,40px) clamp(14px,2vw,28px) clamp(26px,3vw,40px) clamp(14px,2vw,24px);border-bottom:1px solid rgba(255,255,255,.13);transition:all .35s;cursor:default;border-color:rgba(255,255,255,.13)"><span class="av-sup-no" style="font-family:'JetBrains Mono',monospace;font-size:14px;color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.18);width:42px;height:42px;display:flex;align-items:center;justify-content:center;transition:all .35s">05</span><h3 style="font-size:clamp(20px,2.2vw,27px);font-weight:600;letter-spacing:-.01em">Работа с корпоративными API</h3><p style="color:rgba(255,255,255,.55);font-size:16px;line-height:1.55">Встраиваем инструменты в ваши текущие системы, чтобы адаптация занимала как можно меньше времени.</p></div>
+        </div>
+      </section>
+
+      <!-- ===== ФОРМАТЫ РАЗРАБОТКИ ===== -->
+      <section style="max-width:1280px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(80px,11vw,140px)">
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:22px">02 / ФОРМАТЫ</div>
+        <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:18px">Форматы разработки</h2>
+        <p data-reveal="" data-d="2" style="color:rgba(255,255,255,.45);font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.05em;margin-bottom:clamp(34px,4vw,52px)">НАЖМИТЕ, ЧТОБЫ РАЗВЕРНУТЬ</p>
+        <div data-reveal="" data-d="1" style="display:flex;gap:clamp(16px,2vw,26px);align-items:stretch;min-height:240px;overflow:hidden">
+
+          <!-- ФОРМАТ 1 -->
+          <div class="av-xcard" style="{{ dev.c0 }}position:relative;border:1px solid rgba(255,255,255,.13);padding:clamp(28px,3.2vw,46px);display:flex;flex-direction:column;overflow:hidden;min-width:0">
+            <div style="position:absolute;top:0;left:0;height:2px;width:100%;background:var(--acc,#fff);transform:scaleX({{ dev.s0bar }});transform-origin:left;transition:transform .5s"></div>
+            <button onClick="{{ tDev0 }}" style="background:none;border:none;color:#fff;cursor:pointer;text-align:left;width:100%;display:flex;justify-content:space-between;align-items:flex-start;gap:18px">
+              <span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accDim,rgba(255,255,255,.4))">[ Ф—01 ]</span><h3 style="font-size:clamp(24px,2.8vw,38px);font-weight:700;letter-spacing:-.02em;margin-top:18px">Работа с готовыми моделями</h3></span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:24px;flex-shrink:0;transition:transform .4s;{{ dev.s0 }}">+</span>
+            </button>
+            <div style="display:grid;transition:grid-template-rows .6s cubic-bezier(.16,.8,.3,1),opacity .4s;{{ dev.b0 }}"><div style="overflow:hidden"><div style="padding-top:28px">
+              <p style="font-size:clamp(17px,1.9vw,21px);line-height:1.5;color:rgba(255,255,255,.62);max-width:60ch;margin-bottom:48px">Разворачиваем вашего ассистента / агента на базе моделей от OpenAI, Google, Anthropic и др.</p>
+
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.4);margin-bottom:26px">ГДЕ РАЗВОРАЧИВАЕМ</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.8vw,22px);margin-bottom:48px">
+                <div style="border-top:1px solid rgba(255,255,255,.2);padding-top:20px"><h4 style="font-size:19px;font-weight:600;margin-bottom:6px">Облако (по API)</h4><p style="color:rgba(255,255,255,.5);font-size:14px;line-height:1.5;margin-bottom:16px">ИИ работает через облако у российских или зарубежных провайдеров.</p><p style="font-size:13px;line-height:1.5;color:rgba(255,255,255,.7);margin-bottom:8px"><span class="av-acc">+</span> Быстрый старт, минимум железа, топовое качество.</p><p style="font-size:13px;line-height:1.5;color:rgba(255,255,255,.45);margin-bottom:16px"><span>−</span> Не для персональных данных без обезличивания.</p><p style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:rgba(255,255,255,.42);line-height:1.5">→ неперсональные задачи, контент, черновики, прототипы</p></div>
+                <div style="border-top:1px solid rgba(255,255,255,.2);padding-top:20px"><h4 style="font-size:19px;font-weight:600;margin-bottom:6px">Локально (On-Prem)</h4><p style="color:rgba(255,255,255,.5);font-size:14px;line-height:1.5;margin-bottom:16px">Модель ставится и работает на ваших серверах.</p><p style="font-size:13px;line-height:1.5;color:rgba(255,255,255,.7);margin-bottom:8px"><span class="av-acc">+</span> Данные не покидают периметр, полное соответствие 152-ФЗ, независимость от блокировок.</p><p style="font-size:13px;line-height:1.5;color:rgba(255,255,255,.45);margin-bottom:16px"><span>−</span> Нужен GPU, выше стартовая стоимость и обслуживание.</p><p style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:rgba(255,255,255,.42);line-height:1.5">→ персональные данные, коммерческая тайна, регулируемые отрасли</p></div>
+                <div style="border-top:1px solid var(--accDim,rgba(255,255,255,.4));padding-top:20px"><h4 style="font-size:19px;font-weight:600;margin-bottom:6px">Гибрид</h4><p style="color:rgba(255,255,255,.5);font-size:14px;line-height:1.5;margin-bottom:16px">Чувствительное — на локальной модели, остальное — через API.</p><p style="font-size:13px;line-height:1.5;color:rgba(255,255,255,.7)">Лучшее по соотношению цена / качество за счёт оптимальной стоимости при сохранении контроля над важными данными.</p></div>
+              </div>
+
+              <!-- Сравнительная таблица -->
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.4);margin-bottom:18px">СРАВНЕНИЕ</div>
+              <div style="border:1px solid rgba(255,255,255,.12);overflow:hidden;margin-bottom:8px">
+                <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;background:rgba(255,255,255,.03)"><div style="padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.4)">ПАРАМЕТР</div><div style="padding:16px 18px;font-weight:600;font-size:14.5px;border-left:1px solid rgba(255,255,255,.1)">По API</div><div style="padding:16px 18px;font-weight:600;font-size:14.5px;border-left:1px solid rgba(255,255,255,.1)">Локально</div><div style="padding:16px 18px;font-weight:600;font-size:14.5px;border-left:1px solid rgba(255,255,255,.1)">Гибрид</div></div>
+                <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;border-top:1px solid rgba(255,255,255,.1)"><div style="padding:16px 18px;color:rgba(255,255,255,.55);font-size:14px">Старт</div><div style="padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:13px;border-left:1px solid rgba(255,255,255,.07)">До 2–3 дней</div><div style="padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:13px;border-left:1px solid rgba(255,255,255,.07)">От 1–2 недель</div><div style="padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:13px;border-left:1px solid rgba(255,255,255,.07)">От 1–2 недель</div></div>
+                <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;border-top:1px solid rgba(255,255,255,.1)"><div style="padding:16px 18px;color:rgba(255,255,255,.55);font-size:14px">Инфраструктура</div><div style="padding:16px 18px;font-size:13px;color:rgba(255,255,255,.8);border-left:1px solid rgba(255,255,255,.07)">Отсутствует</div><div style="padding:16px 18px;font-size:13px;color:rgba(255,255,255,.8);border-left:1px solid rgba(255,255,255,.07)">Свои сервера</div><div style="padding:16px 18px;font-size:13px;color:rgba(255,255,255,.8);border-left:1px solid rgba(255,255,255,.07)">Свои сервера</div></div>
+                <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;border-top:1px solid rgba(255,255,255,.1)"><div style="padding:16px 18px;color:rgba(255,255,255,.55);font-size:14px">Конфиденциальность</div><div style="padding:16px 18px;border-left:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:7px"><span style="display:flex;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.7)"></span><span style="width:6px;height:6px;border-radius:50%;border:1px solid rgba(255,255,255,.3)"></span><span style="width:6px;height:6px;border-radius:50%;border:1px solid rgba(255,255,255,.3)"></span></span></div><div style="padding:16px 18px;border-left:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:7px"><span style="display:flex;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:var(--acc,#fff)"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--acc,#fff)"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--acc,#fff)"></span></span></div><div style="padding:16px 18px;border-left:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:7px"><span style="display:flex;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:var(--acc,#fff)"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--acc,#fff)"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--acc,#fff)"></span></span></div></div>
+                <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;border-top:1px solid rgba(255,255,255,.1)"><div style="padding:16px 18px;color:rgba(255,255,255,.55);font-size:14px">Устойчивость к блокировкам</div><div style="padding:16px 18px;border-left:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:7px"><span style="display:flex;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.7)"></span><span style="width:6px;height:6px;border-radius:50%;border:1px solid rgba(255,255,255,.3)"></span><span style="width:6px;height:6px;border-radius:50%;border:1px solid rgba(255,255,255,.3)"></span></span></div><div style="padding:16px 18px;border-left:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:7px"><span style="display:flex;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:var(--acc,#fff)"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--acc,#fff)"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--acc,#fff)"></span></span></div><div style="padding:16px 18px;border-left:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:7px"><span style="display:flex;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:var(--acc,#fff)"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--acc,#fff)"></span><span style="width:6px;height:6px;border-radius:50%;border:1px solid rgba(255,255,255,.3)"></span></span></div></div>
+              </div>
+
+              <!-- Наш стек -->
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.4);margin:40px 0 20px">НАШ СТЕК</div>
+              <div style="display:flex;flex-wrap:wrap;gap:10px">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid rgba(255,255,255,.18);padding:9px 16px;color:rgba(255,255,255,.78);transition:all .3s" style-hover="border-color:var(--acc,#fff);color:#fff">YandexGPT</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid rgba(255,255,255,.18);padding:9px 16px;color:rgba(255,255,255,.78);transition:all .3s" style-hover="border-color:var(--acc,#fff);color:#fff">OpenAI</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid rgba(255,255,255,.18);padding:9px 16px;color:rgba(255,255,255,.78);transition:all .3s" style-hover="border-color:var(--acc,#fff);color:#fff">Anthropic</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid rgba(255,255,255,.18);padding:9px 16px;color:rgba(255,255,255,.78);transition:all .3s" style-hover="border-color:var(--acc,#fff);color:#fff">T-Pro</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid rgba(255,255,255,.18);padding:9px 16px;color:rgba(255,255,255,.78);transition:all .3s" style-hover="border-color:var(--acc,#fff);color:#fff">Google</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid rgba(255,255,255,.18);padding:9px 16px;color:rgba(255,255,255,.78);transition:all .3s" style-hover="border-color:var(--acc,#fff);color:#fff">GigaChat</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid rgba(255,255,255,.18);padding:9px 16px;color:rgba(255,255,255,.78);transition:all .3s" style-hover="border-color:var(--acc,#fff);color:#fff">Llama</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid rgba(255,255,255,.18);padding:9px 16px;color:rgba(255,255,255,.78);transition:all .3s" style-hover="border-color:var(--acc,#fff);color:#fff">DeepSeek</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid rgba(255,255,255,.18);padding:9px 16px;color:rgba(255,255,255,.78);transition:all .3s" style-hover="border-color:var(--acc,#fff);color:#fff">Qwen</span>
+              </div>
+            </div></div></div>
+          </div>
+
+          <!-- ФОРМАТ 2 -->
+          <div class="av-xcard" style="{{ dev.c1 }}position:relative;border:1px solid rgba(255,255,255,.13);padding:clamp(28px,3.2vw,46px);display:flex;flex-direction:column;overflow:hidden;min-width:0">
+            <div style="position:absolute;top:0;left:0;height:2px;width:100%;background:var(--acc,#fff);transform:scaleX({{ dev.s1bar }});transform-origin:left;transition:transform .5s"></div>
+            <button onClick="{{ tDev1 }}" style="background:none;border:none;color:#fff;cursor:pointer;text-align:left;width:100%;display:flex;justify-content:space-between;align-items:flex-start;gap:18px">
+              <span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accDim,rgba(255,255,255,.4))">[ Ф—02 ]</span><h3 style="font-size:clamp(24px,2.8vw,38px);font-weight:700;letter-spacing:-.02em;margin-top:18px">ML-инженерия</h3></span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:24px;flex-shrink:0;transition:transform .4s;{{ dev.s1 }}">+</span>
+            </button>
+            <div style="display:grid;transition:grid-template-rows .6s cubic-bezier(.16,.8,.3,1),opacity .4s;{{ dev.b1 }}"><div style="overflow:hidden"><div style="padding-top:28px">
+              <p style="font-size:clamp(17px,1.9vw,21px);line-height:1.5;color:rgba(255,255,255,.62);max-width:60ch;margin-bottom:48px">Обучаем и адаптируем модель под ваши задачи.</p>
+
+              <h4 style="font-size:clamp(20px,2.2vw,28px);font-weight:600;letter-spacing:-.01em;margin-bottom:20px">Кому подходит дообучение</h4>
+              <p style="color:rgba(255,255,255,.55);font-size:15.5px;line-height:1.6;max-width:74ch;margin-bottom:14px">Модели, которыми мы пользуемся, обучены на всём подряд: книги, статьи, код, документы, изображения. Они созданы для решения задач во всех областях и выступают как универсальные помощники.</p>
+              <p style="color:rgba(255,255,255,.55);font-size:15.5px;line-height:1.6;max-width:74ch;margin-bottom:14px">Но универсальность не означает глубокую экспертизу в вашей отрасли. Если её задача — работать с медицинскими снимками, анализировать страховые случаи или помогать инженерам на производстве, знания по тысячам других тем ей просто не нужны.</p>
+              <p style="color:rgba(255,255,255,.55);font-size:15.5px;line-height:1.6;max-width:74ch;margin-bottom:28px">В большинстве случаев достаточно правильно настроить промпты и подключить базу знаний через RAG — это быстрее, дешевле и проще в поддержке. Дообучение требуется только тогда, когда нужна экспертиза:</p>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.8vw,22px);margin-bottom:52px">
+                <div style="border-top:1px solid rgba(255,255,255,.2);padding-top:18px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accDim,rgba(255,255,255,.4));margin-bottom:12px">01</div><h5 style="font-size:16px;font-weight:600;margin-bottom:8px">Высокие требования к качеству</h5><p style="color:rgba(255,255,255,.5);font-size:13.5px;line-height:1.5">Модель должна стабильно работать в узкой области, учитывать внутренние правила и отвечать в определённом стиле.</p></div>
+                <div style="border-top:1px solid rgba(255,255,255,.2);padding-top:18px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accDim,rgba(255,255,255,.4));margin-bottom:12px">02</div><h5 style="font-size:16px;font-weight:600;margin-bottom:8px">Специфические данные</h5><p style="color:rgba(255,255,255,.5);font-size:13.5px;line-height:1.5">Медицинские снимки, промышленные датчики, чертежи, специализированные документы или редкие форматы файлов.</p></div>
+                <div style="border-top:1px solid rgba(255,255,255,.2);padding-top:18px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accDim,rgba(255,255,255,.4));margin-bottom:12px">03</div><h5 style="font-size:16px;font-weight:600;margin-bottom:8px">Повторяющиеся сценарии</h5><p style="color:rgba(255,255,255,.5);font-size:13.5px;line-height:1.5">Если приходится постоянно добавлять в промпты одни и те же инструкции — дообучение переносит эти знания внутрь модели.</p></div>
+              </div>
+
+              <h4 style="font-size:clamp(20px,2.2vw,28px);font-weight:600;letter-spacing:-.01em;margin-bottom:18px">Брать предобученную или писать с нуля?</h4>
+              <p style="color:rgba(255,255,255,.55);font-size:15.5px;line-height:1.6;max-width:74ch;margin-bottom:14px">Предобученная модель — это «модель с опытом»: её уже научили видеть общие паттерны на огромных датасетах. Мы меняем верхние слои под ваши данные и немного докручиваем — получаем высокое качество быстро и на малых объёмах.</p>
+              <p style="font-size:clamp(18px,2vw,24px);font-weight:300;line-height:1.4;max-width:30ch;margin-bottom:36px">В B2B предобученные модели закрывают <span class="av-acc" style="font-weight:600">95% задач</span>.</p>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,1.4vw,18px);margin-bottom:52px">
+                <div style="border:1px solid rgba(255,255,255,.12);padding:22px 20px"><h5 style="font-size:15.5px;font-weight:600;margin-bottom:8px">Меньше данных и GPU</h5><p style="color:rgba(255,255,255,.5);font-size:13px;line-height:1.5">Transfer learning переиспользует выученные признаки — потребность в данных и GPU-часах падает в разы.</p></div>
+                <div style="border:1px solid rgba(255,255,255,.12);padding:22px 20px"><h5 style="font-size:15.5px;font-weight:600;margin-bottom:8px">Быстрее в прод</h5><p style="color:rgba(255,255,255,.5);font-size:13px;line-height:1.5">Time-to-value короче на недели: стартовое качество высокое, итерации быстрые.</p></div>
+                <div style="border:1px solid rgba(255,255,255,.12);padding:22px 20px"><h5 style="font-size:15.5px;font-weight:600;margin-bottom:8px">Стабильнее на малых датасетах</h5><p style="color:rgba(255,255,255,.5);font-size:13px;line-height:1.5">Меньше переобучения, выше устойчивость — там, где модель «с нуля» просто не сошлась бы.</p></div>
+                <div style="border:1px solid rgba(255,255,255,.12);padding:22px 20px"><h5 style="font-size:15.5px;font-weight:600;margin-bottom:8px">Ниже риск провала</h5><p style="color:rgba(255,255,255,.5);font-size:13px;line-height:1.5">Старт с сильного качества, ниже требования к инфраструктуре и MLOps.</p></div>
+              </div>
+
+              <!-- Глубина адаптации -->
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.4);margin-bottom:18px">ГЛУБИНА АДАПТАЦИИ</div>
+              <div style="border:1px solid rgba(255,255,255,.12);margin-bottom:52px">
+                <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr;background:rgba(255,255,255,.03)"><div style="padding:15px 18px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.4)">ПОДХОД</div><div style="padding:15px 18px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.4);border-left:1px solid rgba(255,255,255,.1)">ЧТО МЕНЯЕМ</div><div style="padding:15px 18px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.4);border-left:1px solid rgba(255,255,255,.1)">КОГДА ПРИМЕНЯЕМ</div></div>
+                <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr;border-top:1px solid rgba(255,255,255,.1)"><div style="padding:16px 18px;font-weight:600;font-size:14.5px">Linear probing</div><div style="padding:16px 18px;color:rgba(255,255,255,.55);font-size:14px;border-left:1px solid rgba(255,255,255,.07)">Обучаем только «голову» (head), бэкбон заморожен</div><div style="padding:16px 18px;color:rgba(255,255,255,.55);font-size:14px;border-left:1px solid rgba(255,255,255,.07)">Быстрая проверка гипотезы, очень мало данных</div></div>
+                <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr;border-top:1px solid rgba(255,255,255,.1)"><div style="padding:16px 18px;font-weight:600;font-size:14.5px">PEFT (LoRA / адаптеры)</div><div style="padding:16px 18px;color:rgba(255,255,255,.55);font-size:14px;border-left:1px solid rgba(255,255,255,.07)">Доучиваем миллионы параметров вместо сотен миллионов</div><div style="padding:16px 18px;color:rgba(255,255,255,.55);font-size:14px;border-left:1px solid rgba(255,255,255,.07)">Нужно доменное качество, данных немного, экономим память и время</div></div>
+                <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr;border-top:1px solid rgba(255,255,255,.1)"><div style="padding:16px 18px;font-weight:600;font-size:14.5px">Full fine-tuning</div><div style="padding:16px 18px;color:rgba(255,255,255,.55);font-size:14px;border-left:1px solid rgba(255,255,255,.07)">Доучиваем модель целиком</div><div style="padding:16px 18px;color:rgba(255,255,255,.55);font-size:14px;border-left:1px solid rgba(255,255,255,.07)">Сильный доменный разрыв, есть данные и GPU</div></div>
+                <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr;border-top:1px solid rgba(255,255,255,.1)"><div style="padding:16px 18px;font-weight:600;font-size:14.5px">Обучение с нуля</div><div style="padding:16px 18px;color:rgba(255,255,255,.55);font-size:14px;border-left:1px solid rgba(255,255,255,.07)">Строим модель полностью</div><div style="padding:16px 18px;color:rgba(255,255,255,.55);font-size:14px;border-left:1px solid rgba(255,255,255,.07)">Редко: нет подходящего бэкбона либо лицензия запрещает чекпоинты</div></div>
+              </div>
+
+              <h4 style="font-size:clamp(20px,2.2vw,28px);font-weight:600;letter-spacing:-.01em;margin-bottom:10px">С какими моделями работаем</h4>
+              <p style="color:rgba(255,255,255,.55);font-size:15px;line-height:1.6;max-width:72ch;margin-bottom:26px">Под задачу подбираем не только глубину дообучения, но и тип базовой модели.</p>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.8vw,22px);margin-bottom:52px">
+                <div style="border-top:1px solid rgba(255,255,255,.2);padding-top:18px"><h5 style="font-size:16px;font-weight:600;margin-bottom:6px">Supervised</h5><p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accDim,rgba(255,255,255,.4));margin-bottom:12px">ОБУЧЕНЫ НА РАЗМЕТКЕ</p><p style="color:rgba(255,255,255,.5);font-size:13.5px;line-height:1.5">Универсальный старт «по правильным ответам». Трансформеры на размеченных корпусах; ResNet/ConvNeXt на ImageNet, YOLO на COCO, X3D/SlowFast/I3D на Kinetics.</p></div>
+                <div style="border-top:1px solid rgba(255,255,255,.2);padding-top:18px"><h5 style="font-size:16px;font-weight:600;margin-bottom:6px">Self-Supervised / Contrastive</h5><p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accDim,rgba(255,255,255,.4));margin-bottom:12px">БЕЗ РАЗМЕТКИ</p><p style="color:rgba(255,255,255,.5);font-size:13.5px;line-height:1.5">Учились сравнивать куски данных — часто лучше переносятся на новый домен. Примеры: MoCo, DINO, MAE, BYOL.</p></div>
+                <div style="border-top:1px solid rgba(255,255,255,.2);padding-top:18px"><h5 style="font-size:16px;font-weight:600;margin-bottom:6px">Foundation-модели</h5><p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accDim,rgba(255,255,255,.4));margin-bottom:12px">УНИВЕРСАЛЫ</p><p style="color:rgba(255,255,255,.5);font-size:13.5px;line-height:1.5">Крупные модели, которые донастраиваются под конкретную задачу. Примеры: большие ViT и video-трансформеры, мультимодальные CLIP / VideoCLIP.</p></div>
+              </div>
+
+              <h4 style="font-size:clamp(20px,2.2vw,28px);font-weight:600;letter-spacing:-.01em;margin-bottom:20px">Когда учить с нуля</h4>
+              <div style="display:grid;gap:12px;max-width:78ch;margin-bottom:24px">
+                <div style="display:flex;gap:14px"><span class="av-acc" style="font-family:'JetBrains Mono',monospace;font-size:13px;flex-shrink:0">01</span><p style="color:rgba(255,255,255,.6);font-size:15px;line-height:1.5">Сильный доменный разрыв — ИК / рентген, специфические сенсоры, экзотические форматы, которых не было в выборке для предобучения.</p></div>
+                <div style="display:flex;gap:14px"><span class="av-acc" style="font-family:'JetBrains Mono',monospace;font-size:13px;flex-shrink:0">02</span><p style="color:rgba(255,255,255,.6);font-size:15px;line-height:1.5">Нет подходящего бэкбона — редкая архитектура или жёсткие ограничения по железу.</p></div>
+                <div style="display:flex;gap:14px"><span class="av-acc" style="font-family:'JetBrains Mono',monospace;font-size:13px;flex-shrink:0">03</span><p style="color:rgba(255,255,255,.6);font-size:15px;line-height:1.5">Лицензии не позволяют использовать внешние чекпоинты.</p></div>
+                <div style="display:flex;gap:14px"><span class="av-acc" style="font-family:'JetBrains Mono',monospace;font-size:13px;flex-shrink:0">04</span><p style="color:rgba(255,255,255,.6);font-size:15px;line-height:1.5">Очень большие данные и цель выжать максимум сверх потолка transfer learning (чаще R&amp;D, чем бизнес).</p></div>
+              </div>
+              <p style="color:rgba(255,255,255,.5);font-size:15px;line-height:1.6;max-width:70ch">Если ни один пункт не выполняется — берём предобученную модель и дообучаем. Это дешевле, быстрее и стабильнее.</p>
+            </div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ПРОЦЕСС РАЗРАБОТКИ ===== -->
+      <section style="max-width:1280px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(80px,11vw,140px)">
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:22px">03 / ПРОЦЕСС</div>
+        <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(44px,5.5vw,72px)">Процесс разработки</h2>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(14px,1.6vw,24px)">
+          <div data-reveal="" style="border-top:1px solid rgba(255,255,255,.22);padding-top:24px"><div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:500;margin-bottom:22px">01</div><h3 style="font-size:18px;font-weight:600;margin-bottom:12px">Аудит и ТЗ</h3><p style="color:rgba(255,255,255,.5);font-size:14px;line-height:1.55">На базе консалтинг-аудита фиксируем, что строим и какой результат считаем успехом.</p></div>
+          <div data-reveal="" data-d="1" style="border-top:1px solid rgba(255,255,255,.22);padding-top:24px"><div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:500;margin-bottom:22px">02</div><h3 style="font-size:18px;font-weight:600;margin-bottom:12px">MVP</h3><p style="color:rgba(255,255,255,.5);font-size:14px;line-height:1.55">Запускаем минимальную рабочую версию на одном процессе — обычно за 2–4 недели.</p></div>
+          <div data-reveal="" data-d="2" style="border-top:1px solid rgba(255,255,255,.22);padding-top:24px"><div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:500;margin-bottom:22px">03</div><h3 style="font-size:18px;font-weight:600;margin-bottom:12px">Проверка на данных</h3><p style="color:rgba(255,255,255,.5);font-size:14px;line-height:1.55">За 1–2 недели запускаем. Смотрим, подтверждается ли гипотеза: выросла ли пропускная способность, снизились ли ошибки.</p></div>
+          <div data-reveal="" data-d="3" style="border-top:1px solid rgba(255,255,255,.22);padding-top:24px"><div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:500;margin-bottom:22px">04</div><h3 style="font-size:18px;font-weight:600;margin-bottom:12px">Масштабирование</h3><p style="color:rgba(255,255,255,.5);font-size:14px;line-height:1.55">Расширяем на смежные процессы, добавляем интеграции, укрепляем архитектуру.</p></div>
+          <div data-reveal="" data-d="4" style="border-top:1px solid rgba(255,255,255,.22);padding-top:24px"><div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:500;margin-bottom:22px">05</div><h3 style="font-size:18px;font-weight:600;margin-bottom:12px">Передача и поддержка</h3><p style="color:rgba(255,255,255,.5);font-size:14px;line-height:1.55">Отдаём код и документацию. Дальше — ваша команда или наш SLA.</p></div>
+        </div>
+      </section>
+
+      <!-- ===== РАЗОВАЯ / РЕТЕЙНЕР ===== -->
+      <section style="max-width:1280px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(80px,11vw,140px)">
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:clamp(34px,4vw,52px)">04 / ФОРМАТ РАБОТЫ</div>
+        <div data-reveal="" data-d="1" style="position:relative;display:grid;grid-template-columns:1.15fr .85fr;align-items:stretch">
+          <div style="position:relative;z-index:2;border:1px solid rgba(255,255,255,.16);background:#0C0C0C;padding:clamp(34px,4vw,60px);min-height:clamp(240px,26vw,320px);display:flex;flex-direction:column;justify-content:space-between">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accDim,rgba(255,255,255,.4))">[ 01 ]</span><span style="width:9px;height:9px;background:var(--acc,#fff);border-radius:50%"></span></div>
+            <h3 style="font-size:clamp(30px,4vw,56px);font-weight:700;letter-spacing:-.02em">Разовая разработка</h3>
+          </div>
+          <div class="av-tilt" style="position:relative;z-index:1;margin-top:clamp(28px,4vw,56px);margin-left:clamp(-30px,-3vw,-20px);border:1px solid rgba(255,255,255,.1);background:#080808;padding:clamp(34px,4vw,60px) clamp(34px,4vw,60px) clamp(34px,4vw,60px) clamp(50px,5vw,80px);display:flex;flex-direction:column;justify-content:space-between" style-hover="transform:translateX(18px);border-color:var(--accDim,rgba(255,255,255,.3))">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,.35)">[ 02 ]</span><span style="width:9px;height:9px;border:1.5px solid rgba(255,255,255,.4);border-radius:50%"></span></div>
+            <h3 style="font-size:clamp(28px,3.6vw,50px);font-weight:700;letter-spacing:-.02em;color:rgba(255,255,255,.82)">Ретейнер</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CTA / ФОРМА ===== -->
+      <section id="av-form" style="border-top:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,#0A0A0A,#070707)">
+        <div style="max-width:1280px;margin:0 auto;padding:clamp(60px,9vw,130px) clamp(20px,4vw,48px);display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(40px,6vw,90px);align-items:start">
+          <div>
+            <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(255,255,255,.4);margin-bottom:26px">05 / ЗАЯВКА</div>
+            <h2 data-reveal="" data-d="1" style="font-size:clamp(34px,5vw,72px);font-weight:700;letter-spacing:-.03em;line-height:.98">Обсудить внедрение</h2>
+            <p data-reveal="" data-d="2" style="margin-top:26px;color:rgba(255,255,255,.55);font-size:17px;line-height:1.55;max-width:36ch">Расскажите о задаче — предложим архитектуру, формат работы и сроки.</p>
+          </div>
+          <div data-reveal="" data-d="1">
+            <sc-if value="{{ sent }}">
+              <div style="border:1px solid rgba(255,255,255,.2);padding:48px 40px;min-height:300px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start">
+                <span style="width:46px;height:46px;border:1.5px solid var(--acc,#fff);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:22px;margin-bottom:24px;color:var(--acc,#fff)">✓</span>
+                <h3 style="font-size:28px;font-weight:600;margin-bottom:12px">Заявка отправлена</h3>
+                <p style="color:rgba(255,255,255,.55);font-size:16px;line-height:1.55;max-width:40ch">Мы свяжемся с вами в ближайшее время. Это демонстрационная форма — данные не передаются.</p>
+              </div>
+            </sc-if>
+            <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+            <form onSubmit="{{ onSubmit }}" style="display:grid;gap:30px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px">
+                <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">ВАШЕ ИМЯ *</span><input required="" type="text" placeholder="Иван" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-size:17px;padding:9px 0;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"></label>
+                <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">ВАША ДОЛЖНОСТЬ</span><input type="text" placeholder="CEO / COO / CTO" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-size:17px;padding:9px 0;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"></label>
+              </div>
+              <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">ЧТО ХОТИТЕ УЛУЧШИТЬ?</span>
+                <select style="width:100%;background:#0A0A0A;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:17px;padding:9px 0;cursor:pointer;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"><option>Коммуникацию с клиентами</option><option>Скорость внутренних процессов</option><option>Работу с документами</option><option>Обработку данных</option><option>Аналитику и прогнозирование</option><option>Другое</option></select>
+              </label>
+              <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">БЮДЖЕТ</span>
+                <select style="width:100%;background:#0A0A0A;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:17px;padding:9px 0;cursor:pointer;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"><option>До 100 000 ₽</option><option>100 000 – 300 000 ₽</option><option>300 000 ₽ – 1 000 000 ₽</option><option>Более 1 000 000 ₽</option></select>
+              </label>
+              <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">КРАТКО ОПИШИТЕ ЗАДАЧУ *</span><textarea required="" rows="3" placeholder="Что хотите автоматизировать и почему" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-size:17px;padding:9px 0;resize:vertical;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"></textarea></label>
+              <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);display:block;margin-bottom:10px">КОНТАКТ ДЛЯ СВЯЗИ *</span><input required="" type="text" placeholder="@username или +7 …" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-size:17px;padding:9px 0;transition:border-color .3s" style-focus="border-bottom:1px solid #fff"></label>
+              <div style="display:grid;gap:14px;margin-top:4px">
+                <label style="display:flex;gap:13px;align-items:flex-start;cursor:pointer;color:rgba(255,255,255,.55);font-size:13.5px;line-height:1.45"><input required="" type="checkbox" style="margin-top:2px;width:16px;height:16px;accent-color:#fff;flex-shrink:0"><span>Я ознакомился(-ась) с Политикой обработки персональных данных.</span></label>
+                <label style="display:flex;gap:13px;align-items:flex-start;cursor:pointer;color:rgba(255,255,255,.55);font-size:13.5px;line-height:1.45"><input required="" type="checkbox" style="margin-top:2px;width:16px;height:16px;accent-color:#fff;flex-shrink:0"><span>Даю согласие на обработку моих персональных данных в соответствии с текстом согласия.</span></label>
+              </div>
+              <button type="submit" style="background:#fff;color:#0A0A0A;border:none;cursor:pointer;font-weight:600;font-size:15px;padding:18px 32px;justify-self:start;display:flex;align-items:center;gap:12px;transition:all .3s" style-hover="background:rgba(255,255,255,.85);transform:translateY(-2px)">Отправить заявку<span style="font-family:'JetBrains Mono',monospace">→</span></button>
+            </form>
+            </sc-if>
+          </div>
+        </div>
+      </section>
+
+      <footer style="border-top:1px solid rgba(255,255,255,.1)">
+        <div style="max-width:1280px;margin:0 auto;padding:48px clamp(20px,4vw,48px);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px">
+          <div style="display:flex;align-items:center;gap:11px"><span style="width:10px;height:10px;border:1.5px solid #fff;display:inline-block;transform:rotate(45deg)"></span><span style="font-weight:700;letter-spacing:.34em;font-size:14px;padding-left:3px">AIVION</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,.4);letter-spacing:.05em">© 2026 AIVION · AI ENGINEERING</div>
+        </div>
+      </footer>
+    </div>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Холодное белое свечение&quot;,&quot;Тёмно-зелёный из логотипа&quot;],&quot;default&quot;:&quot;Тёмно-зелёный из логотипа&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;reduceMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { page: 'home', openFaq: null, sent: false, transit: false, expCon: null, expDev: null };
+
+  componentDidMount() {
+    if (!document.getElementById('av-fonts')) {
+      const l = document.createElement('link');
+      l.id = 'av-fonts'; l.rel = 'stylesheet';
+      l.href = 'https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap';
+      l.addEventListener('error', (e) => { e.stopPropagation(); }, true);
+      document.head.appendChild(l);
+    }
+    const root = document.getElementById('av-root');
+    if (root) {
+      const white = this.props.accent === 'Холодное белое свечение';
+      const acc = white ? '#ffffff' : '#2FD08A';
+      root.style.setProperty('--acc', acc);
+      root.style.setProperty('--accSoft', white ? 'rgba(255,255,255,.7)' : 'rgba(47,208,138,.85)');
+      root.style.setProperty('--accDim', white ? 'rgba(255,255,255,.4)' : 'rgba(47,208,138,.32)');
+      root.style.setProperty('--accGlow', white ? 'rgba(255,255,255,.07)' : 'rgba(47,208,138,.12)');
+      this._acc = acc;
+      this._white = white;
+    }
+    this._init();
+  }
+  componentWillUnmount() { this._teardown(); }
+  componentDidUpdate(pp, ps) {
+    if (ps.page !== this.state.page) {
+      this._teardown();
+      setTimeout(() => this._init(), 40);
+    } else {
+      // reveals/counts already attached; reapply comp bars not needed
+    }
+  }
+
+  goTo(p) {
+    if (p === this.state.page) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    this.setState({ transit: true });
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      this.setState({ page: p, openFaq: null, sent: false, expCon: null, expDev: null, transit: false });
+    }, 260);
+  }
+  scrollTo(id) {
+    const el = document.getElementById(id);
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 76, behavior: 'smooth' });
+  }
+  toggleFaq(i) { this.setState(s => ({ openFaq: s.openFaq === i ? null : i })); }
+  toggleCon(i) { this.setState(s => ({ expCon: s.expCon === i ? null : i })); }
+  toggleDev(i) { this.setState(s => ({ expDev: s.expDev === i ? null : i })); }
+  submit(e) { e.preventDefault(); this.setState({ sent: true }); window.scrollTo({ top: window.scrollY, behavior: 'auto' }); }
+
+  _teardown() {
+    if (this._raf) cancelAnimationFrame(this._raf);
+    if (this._onResize) window.removeEventListener('resize', this._onResize);
+    if (this._revCheck) { window.removeEventListener('scroll', this._revCheck, true); window.removeEventListener('resize', this._revCheck, true); this._revCheck = null; }
+    this._checkCounts = null;
+    const c = this._canvas;
+    if (c && this._onMove) { c.removeEventListener('mousemove', this._onMove); c.removeEventListener('mouseleave', this._onLeave); }
+  }
+
+  _init() { this._initCanvas(); this._initReveal(); this._initCounts(); }
+
+  _initReveal() {
+    const root = document.getElementById('av-root');
+    if (!root) return;
+    root.classList.add('rv-on');
+    const reveal = (el) => {
+      el.setAttribute('data-in', '');
+      // fallback: if the animation timeline is throttled/stalled, force the resting visible state
+      setTimeout(() => { el.style.animation = 'none'; el.style.opacity = '1'; el.style.transform = 'none'; }, 1100);
+    };
+    const check = () => {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      document.querySelectorAll('[data-reveal]:not([data-in])').forEach(el => {
+        if (el.getBoundingClientRect().top < vh * 0.94) reveal(el);
+      });
+      if (this._checkCounts) this._checkCounts();
+    };
+    this._revCheck = check;
+    // capture phase catches scroll from ANY scroll container (events don't bubble)
+    window.addEventListener('scroll', check, true);
+    window.addEventListener('resize', check, true);
+    // multiple passes: layout settles late right after a page switch
+    check();
+    requestAnimationFrame(check);
+    setTimeout(check, 120);
+    setTimeout(check, 450);
+  }
+
+  _initCounts() {
+    const run = (el) => {
+      if (el.hasAttribute('data-counted')) return;
+      el.setAttribute('data-counted', '');
+      const target = parseFloat(el.getAttribute('data-target'));
+      const prefix = el.getAttribute('data-prefix') || '';
+      const suffix = el.getAttribute('data-suffix') || '';
+      const dec = parseInt(el.getAttribute('data-decimals') || '0', 10);
+      const group = el.getAttribute('data-group') === '1';
+      const fmt = (n) => {
+        let s = dec ? n.toFixed(dec) : String(Math.round(n));
+        if (group) { const parts = s.split('.'); parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F'); s = parts.join('.'); }
+        return s.replace('.', ',');
+      };
+      const dur = 1400; const t0 = performance.now();
+      const tick = (now) => {
+        const p = Math.min(1, (now - t0) / dur);
+        const e = 1 - Math.pow(1 - p, 3);
+        el.textContent = prefix + fmt(target * e) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      // fallback: guarantee the final value even if rAF is throttled
+      setTimeout(() => { el.textContent = prefix + fmt(target) + suffix; }, dur + 280);
+    };
+    this._checkCounts = () => {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      document.querySelectorAll('[data-count]:not([data-counted])').forEach(el => {
+        if (el.getBoundingClientRect().top < vh * 0.94) run(el);
+      });
+    };
+    this._checkCounts();
+  }
+
+  _initCanvas() {
+    const c = document.getElementById('av-canvas');
+    if (!c) return;
+    this._canvas = c;
+    const ctx = c.getContext('2d');
+    const accRGB = this._white ? [255, 255, 255] : [95, 205, 158];
+    let w = 0, h = 0, dpr = Math.min(2, window.devicePixelRatio || 1);
+    let pts = [];
+    const mouse = { x: -9999, y: -9999, active: false };
+    const reduce = !!this.props.reduceMotion;
+
+    const resize = () => {
+      const r = c.getBoundingClientRect();
+      w = r.width; h = r.height;
+      c.width = w * dpr; c.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = Math.min(110, Math.max(38, Math.floor(w * h / 15000)));
+      pts = [];
+      for (let i = 0; i < count; i++) {
+        pts.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.28, vy: (Math.random() - 0.5) * 0.28 });
+      }
+    };
+    this._onResize = resize;
+    window.addEventListener('resize', resize);
+    resize();
+
+    this._onMove = (e) => { const r = c.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.active = true; };
+    this._onLeave = () => { mouse.active = false; mouse.x = -9999; mouse.y = -9999; };
+    c.addEventListener('mousemove', this._onMove);
+    c.addEventListener('mouseleave', this._onLeave);
+
+    const cr = accRGB[0], cg = accRGB[1], cb = accRGB[2];
+    const LINK = 132;
+    const draw = () => {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < pts.length; i++) {
+        const p = pts[i];
+        if (!reduce) { p.x += p.vx; p.y += p.vy; }
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+        if (mouse.active) {
+          const dx = p.x - mouse.x, dy = p.y - mouse.y; const d = Math.hypot(dx, dy);
+          if (d < 130 && d > 0.01) { const f = (130 - d) / 130 * 1.3; p.x += dx / d * f; p.y += dy / d * f; }
+        }
+      }
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const a = pts[i], b = pts[j];
+          const dx = a.x - b.x, dy = a.y - b.y; const d = Math.hypot(dx, dy);
+          if (d < LINK) {
+            const o = (1 - d / LINK) * 0.18;
+            ctx.strokeStyle = 'rgba(' + cr + ',' + cg + ',' + cb + ',' + o + ')';
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+          }
+        }
+      }
+      if (mouse.active) {
+        for (let i = 0; i < pts.length; i++) {
+          const p = pts[i]; const dx = p.x - mouse.x, dy = p.y - mouse.y; const d = Math.hypot(dx, dy);
+          if (d < 180) {
+            const o = (1 - d / 180) * 0.42;
+            ctx.strokeStyle = 'rgba(' + cr + ',' + cg + ',' + cb + ',' + o + ')';
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+          }
+        }
+      }
+      for (let i = 0; i < pts.length; i++) {
+        const p = pts[i];
+        ctx.fillStyle = 'rgba(' + cr + ',' + cg + ',' + cb + ',0.5)';
+        ctx.beginPath(); ctx.arc(p.x, p.y, 1.4, 0, Math.PI * 2); ctx.fill();
+      }
+      this._raf = requestAnimationFrame(draw);
+    };
+    draw();
+  }
+
+  renderVals() {
+    const page = this.state.page;
+    const open = this.state.openFaq;
+    const panel = i => `grid-template-rows:${open === i ? '1fr' : '0fr'};opacity:${open === i ? 1 : 0};`;
+    const sign = i => `transform:rotate(${open === i ? '45deg' : '0deg'});`;
+    const ec = this.state.expCon, ed = this.state.expDev;
+    const xcard = (st, i) => st === null ? 'flex:1 1 0;opacity:1;' : (st === i ? 'flex:1 1 100%;opacity:1;' : 'flex:0 0 0;opacity:0;padding-left:0;padding-right:0;border-color:transparent;pointer-events:none;');
+    const xbody = (st, i) => `grid-template-rows:${st === i ? '1fr' : '0fr'};opacity:${st === i ? 1 : 0};`;
+    const xsign = (st, i) => `transform:rotate(${st === i ? '45deg' : '0deg'});`;
+    return {
+      isHome: page === 'home', isCon: page === 'consulting', isDev: page === 'development',
+      pageOp: this.state.transit ? 0 : 1,
+      sent: this.state.sent, notSent: !this.state.sent,
+      nav: {
+        home: page === 'home' ? 1 : 0.5,
+        con: page === 'consulting' ? 1 : 0.5,
+        dev: page === 'development' ? 1 : 0.5,
+      },
+      goHome: () => this.goTo('home'),
+      goCon: () => this.goTo('consulting'),
+      goDev: () => this.goTo('development'),
+      goForm: () => { if (this.state.page !== 'home') { this.goTo('home'); setTimeout(() => this.scrollTo('av-form'), 420); } else this.scrollTo('av-form'); },
+      goCases: () => this.scrollTo('av-cases'),
+      tCon0: () => this.toggleCon(0), tCon1: () => this.toggleCon(1),
+      tDev0: () => this.toggleDev(0), tDev1: () => this.toggleDev(1),
+      con: { c0: xcard(ec, 0), c1: xcard(ec, 1), b0: xbody(ec, 0), b1: xbody(ec, 1), s0: xsign(ec, 0), s1: xsign(ec, 1), s0bar: ec === 0 ? 1 : 0, s1bar: ec === 1 ? 1 : 0 },
+      dev: { c0: xcard(ed, 0), c1: xcard(ed, 1), b0: xbody(ed, 0), b1: xbody(ed, 1), s0: xsign(ed, 0), s1: xsign(ed, 1), s0bar: ed === 0 ? 1 : 0, s1bar: ed === 1 ? 1 : 0 },
+      onSubmit: (e) => this.submit(e),
+      tFaq0: () => this.toggleFaq(0), tFaq1: () => this.toggleFaq(1), tFaq2: () => this.toggleFaq(2), tFaq3: () => this.toggleFaq(3), tFaq4: () => this.toggleFaq(4),
+      faq: {
+        p0: panel(0), p1: panel(1), p2: panel(2), p3: panel(3), p4: panel(4),
+        s0: sign(0), s1: sign(1), s2: sign(2), s3: sign(3), s4: sign(4),
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>
