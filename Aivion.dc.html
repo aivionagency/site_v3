@@ -12,7 +12,8 @@
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
   :root{--bg:#0A0A0A;--bgrgb:10,10,10;--surface:#0C0E0D;--ink:255,255,255;--tx:#EDEDED;--bad:255,138,138;--acc:#2FD08A;--accSoft:rgba(47,208,138,.85);--accDim:rgba(47,208,138,.32);--accGlow:rgba(47,208,138,.12);--ctaBg:#2FD08A;--ctaTx:#06140E}
-  body{background:var(--bg);color:var(--tx);font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  :root[data-theme="light"]{--bg:#F3F2EC;--bgrgb:243,242,236;--surface:#FFFFFF;--ink:24,28,24;--tx:#15170F;--bad:201,52,52;--acc:#0C9457;--accSoft:rgba(12,148,87,.85);--accDim:rgba(12,148,87,.42);--accGlow:rgba(12,148,87,.10);--ctaBg:#0C9457;--ctaTx:#FFFFFF}
+  body{background:var(--bg);color:var(--tx);font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .45s ease,color .45s ease}
   ::selection{background:rgba(47,208,138,.22);color:var(--tx)}
   .av-prodpanel{opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .26s ease,transform .26s ease,visibility .26s}
   .av-prodpanel[data-open="1"]{opacity:1;visibility:visible;transform:none}
@@ -33,6 +34,7 @@
   @keyframes av-modalin{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:none}}
   .rv-on [data-reveal]{opacity:0}
   .rv-on [data-reveal][data-in]{animation:av-reveal .9s cubic-bezier(.16,.8,.3,1) both}
+  ::placeholder { opacity: 0.4; }
   .rv-on [data-reveal][data-in][data-d="1"]{animation-delay:.08s}
   .rv-on [data-reveal][data-in][data-d="2"]{animation-delay:.16s}
   .rv-on [data-reveal][data-in][data-d="3"]{animation-delay:.24s}
@@ -71,7 +73,7 @@
             <button onClick="{{ goDaily }}" class="av-ddrow" style="display:block;width:100%;text-align:left;background:rgba(var(--ink),.05);border:none;cursor:pointer;padding:14px 16px;transition:background .25s;position:relative"><div style="display:flex;align-items:center;gap:9px;margin-bottom:4px"><span style="color:var(--tx);font-weight:700;font-size:15px">Daily Brief</span><span style="display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.08em;color:var(--ctaTx,#06140E);background:var(--acc,#fff);padding:3px 8px 3px 6px;font-weight:700">📦 ГОТОВОЕ РЕШЕНИЕ</span></div><div style="color:rgba(var(--ink),.55);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.02em">утренняя сводка по бизнесу за 5 минут</div></button>
             <button onClick="{{ goTraining }}" class="av-ddrow" style="display:block;width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:14px 16px;transition:background .25s"><div style="color:var(--tx);font-weight:600;font-size:15px;margin-bottom:3px">Корпоративное обучение</div><div style="color:rgba(var(--ink),.5);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.02em">команда начинает работать с ИИ за один день</div></button>
             <div style="height:1px;background:rgba(var(--ink),.1);margin:6px 4px"></div>
-            <button onClick="{{ goAgents }}" class="av-ddrow" style="display:block;width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:14px 16px;transition:background .25s"><div style="color:var(--tx);font-weight:600;font-size:15px;margin-bottom:3px">Разработка</div><div style="color:rgba(var(--ink),.5);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.02em">тяжёлый трек под ключ: агенты, интеграции</div></button>
+            <button onClick="{{ goAgents }}" class="av-ddrow" style="display:block;width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:14px 16px;transition:background .25s"><div style="color:var(--tx);font-weight:600;font-size:15px;margin-bottom:3px">Разработка</div><div style="color:rgba(var(--ink),.5);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.02em">тяжёлый трек под ключ: агенты, интеграции, AIOS</div></button>
           </div>
         </div>
         <button onClick="{{ goForm }}" style="background:var(--ctaBg,#2FD08A);color:var(--ctaTx,#06140E);border:none;cursor:pointer;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:12px;letter-spacing:.08em;padding:11px 22px;display:flex;align-items:center;gap:9px;transition:all .3s" style-hover="filter:brightness(1.08);transform:translateY(-1px)"><span style="width:6px;height:6px;border-radius:50%;background:var(--ctaTx,#06140E);display:inline-block"></span>Получить консультацию</button>
@@ -175,7 +177,7 @@
       </section>
 
       <section style="max-width:1440px;margin:0 auto;padding:clamp(40px,6vw,90px) clamp(20px,4vw,56px) clamp(80px,11vw,140px)">
-        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(var(--ink),.4);margin-bottom:22px">04 / КАК МЫ РАБОТАЕМ</div>
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(var(--ink),.4);margin-bottom:22px">03 / КАК МЫ РАБОТАЕМ</div>
         <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(44px,5.5vw,72px)">Как мы работаем</h2>
         <div data-reveal="" data-d="1" style="position:relative">
           <div style="position:absolute;top:0;left:0;right:0;height:1px;background:var(--accDim,rgba(var(--ink),.3))"><div class="av-line-draw" style="height:100%;background:var(--acc,#fff)"></div></div>
@@ -188,20 +190,8 @@
         </div>
       </section>
 
-      <section style="max-width:1440px;margin:0 auto;padding:clamp(40px,6vw,90px) clamp(20px,4vw,56px) clamp(60px,8vw,110px)">
-        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(var(--ink),.4);margin-bottom:22px">05 / ПАРТНЁРСТВО</div>
-        <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:24px">Остаёмся вашим ИИ-партнёром</h2>
-        <p data-reveal="" data-d="1" style="color:rgba(var(--ink),.58);font-size:18px;line-height:1.55;max-width:66ch;margin-bottom:clamp(40px,5vw,56px)">После внедрения сложной системы можно не расставаться. Раз в месяц вы говорите, что хотите автоматизировать дальше — мы добавляем 1–2 новые автоматизации. Контекст вашего бизнеса уже настроен, поэтому каждая следующая фича выходит быстро и дешевле.</p>
-        <div data-reveal="" data-d="1" style="display:flex;flex-wrap:wrap;align-items:stretch;gap:0;max-width:920px">
-          <div style="flex:1;min-width:240px;border:1px solid rgba(var(--ink),.14);padding:clamp(26px,3vw,40px)"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.4);margin-bottom:14px">ЭТАП 1</div><h3 style="font-size:22px;font-weight:600;margin-bottom:10px">Установка</h3><p style="color:rgba(var(--ink),.55);font-size:15px;line-height:1.5">Разовый запуск: разбор, внедрение сложной системы под ключ.</p></div>
-          <div style="display:flex;align-items:center;justify-content:center;padding:0 18px;font-family:'JetBrains Mono',monospace;font-size:24px;color:var(--acc,#fff)">→</div>
-          <div style="flex:1;min-width:240px;border:1px solid var(--acc,#fff);background:linear-gradient(150deg,rgba(47,208,138,.08),transparent);padding:clamp(26px,3vw,40px)"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--acc,#fff);margin-bottom:14px">ЭТАП 2</div><h3 style="font-size:22px;font-weight:600;margin-bottom:10px">Ретейнер</h3><p style="color:rgba(var(--ink),.6);font-size:15px;line-height:1.5">1–2 новые автоматизации каждый месяц по подписке.</p></div>
-        </div>
-        <p data-reveal="" style="margin-top:24px;color:rgba(var(--ink),.65);font-size:clamp(17px,1.9vw,22px);font-weight:300;max-width:50ch">Личный ИИ-инженер в вашем углу — <span class="av-acc">вместо найма штатной команды</span>.</p>
-      </section>
-
       <section style="max-width:1440px;margin:0 auto;padding:clamp(40px,6vw,90px) clamp(20px,4vw,56px) clamp(80px,11vw,140px)">
-        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(var(--ink),.4);margin-bottom:22px">06 / FAQ</div>
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(var(--ink),.4);margin-bottom:22px">05 / FAQ</div>
         <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(36px,4.5vw,56px)">Частые вопросы</h2>
         <div data-reveal="" data-d="1" style="border-top:1px solid rgba(var(--ink),.14)">
           <div style="border-bottom:1px solid rgba(var(--ink),.14)"><button onClick="{{ fq.h0 }}" style="width:100%;background:none;border:none;cursor:pointer;color:var(--tx);text-align:left;display:flex;align-items:center;gap:20px;padding:clamp(22px,2.4vw,30px) 0"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(var(--ink),.35);flex-shrink:0">F—01</span><span style="flex:1;font-size:clamp(18px,2vw,24px);font-weight:500;letter-spacing:-.01em">Сколько стоят услуги?</span><span style="font-family:'JetBrains Mono',monospace;font-size:22px;flex-shrink:0;transition:transform .4s cubic-bezier(.16,.8,.3,1);{{ fs.h0 }}">+</span></button><div style="display:grid;transition:grid-template-rows .55s cubic-bezier(.16,.8,.3,1),opacity .4s ease;{{ fp.h0 }}"><div style="overflow:hidden"><div style="padding:0 0 30px 49px;max-width:74ch;color:rgba(var(--ink),.6);font-size:16px;line-height:1.6"><p style="margin-bottom:18px">Стоимость зависит от масштаба задачи. Разница между простым чат-ботом и полноценной системой автоматизации такая же, как между приёмом таблетки и операцией на сердце: оба случая касаются здоровья, но требуют совершенно разного объёма работы. Ориентировочные цифры приведены ниже.</p><div style="display:grid;gap:0;margin:22px 0;border-top:1px solid rgba(var(--ink),.1)"><div style="display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid rgba(var(--ink),.08)"><span>Чат-боты и ИИ-ассистенты внутри Telegram</span><span style="font-family:'JetBrains Mono',monospace;color:var(--tx);white-space:nowrap">от 40 000 ₽</span></div><div style="display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid rgba(var(--ink),.08)"><span>Интеграция ИИ с CRM, ERP и внутренними системами</span><span style="font-family:'JetBrains Mono',monospace;color:var(--tx);white-space:nowrap">от 100 000 ₽</span></div><div style="display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid rgba(var(--ink),.08)"><span>Кастомные мультиагентные системы</span><span style="font-family:'JetBrains Mono',monospace;color:var(--tx);white-space:nowrap">от 180 000 ₽</span></div><div style="display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid rgba(var(--ink),.08)"><span>Комплексные решения с несколькими сценариями автоматизации</span><span style="font-family:'JetBrains Mono',monospace;color:var(--tx);white-space:nowrap">от 700 000 ₽</span></div></div><p style="margin-bottom:14px">На итоговую стоимость влияют количество интеграций, объём данных, требования к безопасности и текущий уровень автоматизации. Поэтому точную оценку мы готовим после анализа ваших задач и существующей инфраструктуры.</p><p style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(var(--ink),.4)">* Локальное развёртывание ИИ требует дополнительных трат на железо.</p></div></div></div></div>
@@ -320,58 +310,10 @@
           <button onClick="{{ openModal }}" style="background:var(--ctaBg,#2FD08A);color:var(--ctaTx,#06140E);border:none;cursor:pointer;font-weight:700;font-size:15px;padding:17px 32px;display:flex;align-items:center;gap:12px;transition:all .3s" style-hover="filter:brightness(1.08);transform:translateY(-2px)">Нужен кастомный агент<span style="font-family:'JetBrains Mono',monospace">→</span></button>
         </div>
       </section>
-
-
-      <section style="position:relative;padding:clamp(60px,8vw,120px) clamp(20px,4vw,56px);background:linear-gradient(180deg,transparent,rgba(47,208,138,.025),transparent)">
-        <div style="max-width:1440px;margin:0 auto">
-          <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(var(--ink),.4);margin-bottom:22px">02 / БОЛЬШАЯ КАРТИНА</div>
-          <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:22px">Один агент сегодня — вся система завтра</h2>
-          <p data-reveal="" data-d="1" style="color:rgba(var(--ink),.58);font-size:18px;line-height:1.55;max-width:62ch;margin-bottom:22px">Мы готовим почву под весь ваш бизнес сразу — собираем контекст и данные. Но засеваем сначала один «квадрат»: запускаем одного агента. Дальше каждый следующий агент дешевле — почва уже вспахана.</p>
-          <div data-reveal="" data-d="1" onClick="{{ goDailyLink }}" style="margin-bottom:clamp(40px,5vw,64px);display:flex;align-items:center;gap:14px;flex-wrap:wrap;border-left:2px solid var(--acc,#fff);padding:14px 22px;background:rgba(47,208,138,.04);cursor:pointer"><span style="color:rgba(var(--ink),.72);font-size:16px;line-height:1.5"><span class="av-acc" style="font-weight:600">Daily Brief</span> — входная точка в AIOS (слой Intelligence). Уже пользуетесь сводкой? Следующий шаг — отсюда →</span></div>
-
-          <div data-reveal="" data-d="1" style="display:grid;grid-template-columns:1.25fr .9fr;gap:clamp(28px,4vw,56px);align-items:center">
-            <div>
-              <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:22px">
-                <div style="display:inline-flex;border:1px solid rgba(var(--ink),.16);padding:5px;gap:4px">
-                  <button onClick="{{ aios.set0 }}" style="background:{{ aios.b0 }};color:{{ aios.t0 }};border:none;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.04em;padding:11px 20px;transition:all .3s">1 агент</button>
-                  <button onClick="{{ aios.set1 }}" style="background:{{ aios.b1 }};color:{{ aios.t1 }};border:none;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.04em;padding:11px 20px;transition:all .3s">5 агентов</button>
-                  <button onClick="{{ aios.set2 }}" style="background:{{ aios.b2 }};color:{{ aios.t2 }};border:none;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.04em;padding:11px 20px;transition:all .3s">10 агентов</button>
-                </div>
-                <div style="display:inline-flex;border:1px solid rgba(var(--ink),.16);padding:5px;gap:4px">
-                  <button onClick="{{ aios.toggleAios }}" style="background:{{ aios.aiosBg }};color:{{ aios.aiosTx }};border:none;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.04em;padding:11px 20px;transition:all .3s">AIOS</button>
-                  <button onClick="{{ aios.toggleNoAios }}" style="background:{{ aios.noAiosBg }};color:{{ aios.noAiosTx }};border:none;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.04em;padding:11px 20px;transition:all .3s">Без AIOS</button>
-                </div>
-              </div>
-              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;min-height:30px">
-                <sc-for list="{{ agentTags }}" as="tag" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(var(--ink),.6);border:1px solid rgba(var(--ink),.16);padding:5px 10px;background:rgba(47,208,138,.04)">{{ tag.icon }} {{ tag.label }}</span></sc-for>
-              </div>
-              <div style="perspective:1100px"><div style="transform:rotateX(22deg);transform-style:preserve-3d;display:grid;grid-template-columns:repeat(8,1fr);gap:7px;max-width:560px">
-                <sc-for list="{{ cells }}" as="cell" hint-placeholder-count="40"><div style="{{ cell.style }}"></div></sc-for>
-              </div></div>
-            </div>
-            <div>
-              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;color:rgba(var(--ink),.4);margin-bottom:10px">ЦЕНА ЗА ОДНОГО АГЕНТА</div>
-              <div style="font-size:clamp(64px,10vw,128px);font-weight:700;letter-spacing:-.04em;line-height:.9;color:var(--acc,#fff)">{{ aios.price }}<span style="font-size:.34em;color:rgba(var(--ink),.5);font-weight:500">%</span></div>
-              <div style="margin-top:18px;height:8px;background:rgba(var(--ink),.08);max-width:340px;overflow:hidden"><div style="height:100%;background:var(--acc,#fff);width:{{ aios.barW }};transition:width .6s cubic-bezier(.16,.8,.3,1)"></div></div>
-              <p style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:rgba(var(--ink),.4)">{{ aios.priceNote }}</p>
-              <p style="margin-top:22px;color:rgba(var(--ink),.55);font-size:15px;line-height:1.55;max-width:34ch">При 10 агентах на общем контексте AIOS цена за агента падает до <span class="av-acc" style="font-weight:600">20%</span> от цены отдельного агента. Самое главное — один раз собрать общий контекст бизнеса.</p>
-            </div>
-          </div>
-
-          <div data-reveal="" style="margin-top:clamp(56px,7vw,100px);position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(18px,2.4vw,30px)">
-            <div style="position:absolute;left:0;right:0;top:34px;height:2px;background:rgba(var(--ink),.1)"><div class="av-line-draw" style="height:100%;background:var(--accDim,rgba(var(--ink),.3))"></div></div>
-            <div style="position:relative;padding-top:0"><div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--acc,#fff);background:var(--bg);margin-bottom:50px;position:relative;z-index:1"><span style="position:absolute;inset:4px;background:var(--acc,#fff);border-radius:50%"></span></div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.4);margin-bottom:10px">ПОЧВА · слои 1–2</div><h3 style="font-size:22px;font-weight:600;margin-bottom:12px">Собираем контекст</h3><p style="color:rgba(var(--ink),.55);font-size:15px;line-height:1.55">Собираем весь контекст и данные вашего бизнеса в одну базу. ИИ знает, кто вы, что продаёте и как у вас всё устроено.</p></div>
-            <div style="position:relative"><div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--acc,#fff);background:var(--bg);margin-bottom:50px;position:relative;z-index:1"><span style="position:absolute;inset:4px;background:var(--acc,#fff);border-radius:50%"></span></div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.4);margin-bottom:10px">ВСХОДЫ · слои 3–4</div><h3 style="font-size:22px;font-weight:600;margin-bottom:12px">Рутина выполняется сама</h3><p style="color:rgba(var(--ink),.55);font-size:15px;line-height:1.55">Каждое утро — короткая сводка: что произошло, где провисло, что улучшить. Рутина начинает выполняться сама.</p></div>
-            <div style="position:relative"><div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--acc,#fff);background:var(--bg);margin-bottom:50px;position:relative;z-index:1"><span style="position:absolute;inset:4px;background:var(--acc,#fff);border-radius:50%"></span></div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.4);margin-bottom:10px">УРОЖАЙ · слой 5</div><h3 style="font-size:22px;font-weight:600;margin-bottom:12px">Вы занимаетесь ростом</h3><p style="color:rgba(var(--ink),.55);font-size:15px;line-height:1.55">Вы перестаёте тушить пожары и занимаетесь стратегией и ростом. Бизнес работает, ИИ держит операционку.</p></div>
-          </div>
-        </div>
       </section>
 
-
       <section style="max-width:1440px;margin:0 auto;padding:clamp(40px,6vw,90px) clamp(20px,4vw,56px) clamp(60px,8vw,110px)">
-        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(var(--ink),.4);margin-bottom:22px">03 / ПАРТНЁРСТВО</div>
-      <section style="max-width:1440px;margin:0 auto;padding:clamp(40px,6vw,90px) clamp(20px,4vw,56px) clamp(60px,8vw,110px)">
-        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(var(--ink),.4);margin-bottom:22px">04 / FAQ</div><h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(36px,4.5vw,56px)">Частые вопросы</h2>
+        <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(var(--ink),.4);margin-bottom:22px">07 / FAQ</div><h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(36px,4.5vw,56px)">Частые вопросы</h2>
         <div data-reveal="" data-d="1" style="border-top:1px solid rgba(var(--ink),.14)">
           <div style="border-bottom:1px solid rgba(var(--ink),.14)"><button onClick="{{ fq.a0 }}" style="width:100%;background:none;border:none;cursor:pointer;color:var(--tx);text-align:left;display:flex;align-items:center;gap:20px;padding:clamp(22px,2.4vw,30px) 0"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(var(--ink),.35);flex-shrink:0">F—01</span><span style="flex:1;font-size:clamp(18px,2vw,24px);font-weight:500;letter-spacing:-.01em">Чем коробочный агент отличается от кастомного?</span><span style="font-family:'JetBrains Mono',monospace;font-size:22px;flex-shrink:0;transition:transform .4s cubic-bezier(.16,.8,.3,1);{{ fs.a0 }}">+</span></button><div style="display:grid;transition:grid-template-rows .55s cubic-bezier(.16,.8,.3,1),opacity .4s ease;{{ fp.a0 }}"><div style="overflow:hidden"><div style="padding:0 0 30px 49px;max-width:74ch;color:rgba(var(--ink),.6);font-size:16px;line-height:1.6">Коробочный — типовое решение под частую задачу, запуск за 1–2 недели по фиксированной цене. Кастомный — собираем под ваш уникальный процесс.</div></div></div></div>
           <div style="border-bottom:1px solid rgba(var(--ink),.14)"><button onClick="{{ fq.a1 }}" style="width:100%;background:none;border:none;cursor:pointer;color:var(--tx);text-align:left;display:flex;align-items:center;gap:20px;padding:clamp(22px,2.4vw,30px) 0"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(var(--ink),.35);flex-shrink:0">F—02</span><span style="flex:1;font-size:clamp(18px,2vw,24px);font-weight:500;letter-spacing:-.01em">Это безопасно для наших данных?</span><span style="font-family:'JetBrains Mono',monospace;font-size:22px;flex-shrink:0;transition:transform .4s cubic-bezier(.16,.8,.3,1);{{ fs.a1 }}">+</span></button><div style="display:grid;transition:grid-template-rows .55s cubic-bezier(.16,.8,.3,1),opacity .4s ease;{{ fp.a1 }}"><div style="overflow:hidden"><div style="padding:0 0 30px 49px;max-width:74ch;color:rgba(var(--ink),.6);font-size:16px;line-height:1.6">Да. Работает AI-роутер: чувствительные данные остаются у вас, во внешние модели уходит только обезличенная информация.</div></div></div></div>
@@ -569,7 +511,7 @@
       </section>
 
       <section style="max-width:1440px;margin:0 auto;padding:clamp(40px,6vw,80px) clamp(20px,4vw,56px) clamp(60px,8vw,110px)">
-<div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(var(--ink),.4);margin-bottom:22px">06 / FAQ</div><h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(36px,4.5vw,56px)">Частые вопросы</h2>        <div data-reveal="" data-d="1" style="border-top:1px solid rgba(var(--ink),.14)">
+<div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(var(--ink),.4);margin-bottom:22px">05 / FAQ</div><h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(36px,4.5vw,56px)">Частые вопросы</h2>        <div data-reveal="" data-d="1" style="border-top:1px solid rgba(var(--ink),.14)">
           <div style="border-bottom:1px solid rgba(var(--ink),.14)"><button onClick="{{ fq.t0 }}" style="width:100%;background:none;border:none;cursor:pointer;color:var(--tx);text-align:left;display:flex;align-items:center;gap:20px;padding:clamp(22px,2.4vw,30px) 0"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(var(--ink),.35);flex-shrink:0">F—T0</span><span style="flex:1;font-size:clamp(18px,2vw,24px);font-weight:500;letter-spacing:-.01em">Чем это отличается от онлайн-курса?</span><span style="font-family:'JetBrains Mono',monospace;font-size:22px;flex-shrink:0;transition:transform .4s cubic-bezier(.16,.8,.3,1);{{ fs.t0 }}">+</span></button><div style="display:grid;transition:grid-template-rows .55s cubic-bezier(.16,.8,.3,1),opacity .4s ease;{{ fp.t0 }}"><div style="overflow:hidden"><div style="padding:0 0 30px 49px;max-width:74ch;color:rgba(var(--ink),.6);font-size:16px;line-height:1.6">Курс заканчивается видео. Мы доводим до работающей автоматизации на ваших реальных процессах и сопровождаем 4 недели.</div></div></div></div>
           <div style="border-bottom:1px solid rgba(var(--ink),.14)"><button onClick="{{ fq.t1 }}" style="width:100%;background:none;border:none;cursor:pointer;color:var(--tx);text-align:left;display:flex;align-items:center;gap:20px;padding:clamp(22px,2.4vw,30px) 0"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(var(--ink),.35);flex-shrink:0">F—T1</span><span style="flex:1;font-size:clamp(18px,2vw,24px);font-weight:500;letter-spacing:-.01em">Нужно ли команде разбираться в технологиях?</span><span style="font-family:'JetBrains Mono',monospace;font-size:22px;flex-shrink:0;transition:transform .4s cubic-bezier(.16,.8,.3,1);{{ fs.t1 }}">+</span></button><div style="display:grid;transition:grid-template-rows .55s cubic-bezier(.16,.8,.3,1),opacity .4s ease;{{ fp.t1 }}"><div style="overflow:hidden"><div style="padding:0 0 30px 49px;max-width:74ch;color:rgba(var(--ink),.6);font-size:16px;line-height:1.6">Нет, начинаем с нуля и переводим с языка ИИ на язык вашего бизнеса.</div></div></div></div>
           <div style="border-bottom:1px solid rgba(var(--ink),.14)"><button onClick="{{ fq.t2 }}" style="width:100%;background:none;border:none;cursor:pointer;color:var(--tx);text-align:left;display:flex;align-items:center;gap:20px;padding:clamp(22px,2.4vw,30px) 0"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(var(--ink),.35);flex-shrink:0">F—T2</span><span style="flex:1;font-size:clamp(18px,2vw,24px);font-weight:500;letter-spacing:-.01em">Сколько человек можно привести?</span><span style="font-family:'JetBrains Mono',monospace;font-size:22px;flex-shrink:0;transition:transform .4s cubic-bezier(.16,.8,.3,1);{{ fs.t2 }}">+</span></button><div style="display:grid;transition:grid-template-rows .55s cubic-bezier(.16,.8,.3,1),opacity .4s ease;{{ fp.t2 }}"><div style="overflow:hidden"><div style="padding:0 0 30px 49px;max-width:74ch;color:rgba(var(--ink),.6);font-size:16px;line-height:1.6">До 30–40 за один поток, один отдел за раз.</div></div></div></div>
@@ -578,6 +520,17 @@
       </section>
 
     </div>
+    </sc-if>
+
+    <!-- ================================================================= API ================================================================= -->
+    <sc-if value="{{ isApi }}">
+    <div data-screen-label="Работа по API"><dc-import name="Aivion Approach" variant="api" on-back="{{ goAgents }}" hint-size="100%,2400px"></dc-import></div>
+    </sc-if>
+    <sc-if value="{{ isLocal }}">
+    <div data-screen-label="Локальное развёртывание"><dc-import name="Aivion Approach" variant="local" on-back="{{ goAgents }}" hint-size="100%,2400px"></dc-import></div>
+    </sc-if>
+    <sc-if value="{{ isFinetune }}">
+    <div data-screen-label="Дообучение моделей"><dc-import name="Aivion Approach" variant="finetune" on-back="{{ goAgents }}" hint-size="100%,2400px"></dc-import></div>
     </sc-if>
 
     <!-- ================================================================= SHARED FORM ================================================================= -->
@@ -594,7 +547,7 @@
         <div style="display:flex;flex-wrap:wrap;gap:clamp(14px,2vw,28px);font-family:'JetBrains Mono',monospace;font-size:12.5px"><button onClick="{{ goHome }}" style="background:none;border:none;color:rgba(var(--ink),.55);cursor:pointer">Главная</button><button onClick="{{ goDaily }}" style="background:none;border:none;color:rgba(var(--ink),.55);cursor:pointer">Daily Brief</button><button onClick="{{ goTraining }}" style="background:none;border:none;color:rgba(var(--ink),.55);cursor:pointer">Обучение</button><button onClick="{{ goAgents }}" style="background:none;border:none;color:rgba(var(--ink),.55);cursor:pointer">Разработка</button></div>
         <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(var(--ink),.3);letter-spacing:.08em">© 2026 AIVION · AI ENGINEERING</div>
       </div>
-      <div style="max-width:1440px;margin:24px auto 0;text-align:center;font-size:11px;color:rgba(var(--ink),.4);font-family:'JetBrains Mono',monospace">
+      <div style="max-width:1440px;margin:16px auto 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(var(--ink),.3);">
         <a href="/privacy-policy.pdf" target="_blank" style="color:inherit;text-decoration:underline;margin-right:16px">Политика конфиденциальности</a>
         <a href="/personal-data-agreement.pdf" target="_blank" style="color:inherit;text-decoration:underline">Согласие на обработку персональных данных</a>
       </div>
@@ -639,7 +592,7 @@
         <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.45);display:block;margin-bottom:10px">ВАШЕ ИМЯ *</span><input required="" type="text" placeholder="Иван" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(var(--ink),.2);color:var(--tx);font-size:17px;padding:9px 0;transition:border-color .3s" style-focus="border-bottom:1px solid var(--tx)"></label>
         <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.45);display:block;margin-bottom:10px">КОНТАКТ ДЛЯ СВЯЗИ *</span><input required="" type="text" placeholder="@username или +7 …" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(var(--ink),.2);color:var(--tx);font-size:17px;padding:9px 0;transition:border-color .3s" style-focus="border-bottom:1px solid var(--tx)"></label>
         <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.45);display:block;margin-bottom:10px">ОПИШИТЕ, КАКОГО АГЕНТА ХОТИТЕ *</span><textarea required="" rows="3" placeholder="Какую задачу должен закрывать агент" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(var(--ink),.2);color:var(--tx);font-size:17px;padding:9px 0;resize:vertical;transition:border-color .3s" style-focus="border-bottom:1px solid var(--tx)"></textarea></label>
-        <label style="display:flex;gap:13px;align-items:flex-start;cursor:pointer;color:rgba(var(--ink),.55);font-size:13.5px;line-height:1.45"><input required="" type="checkbox" style="margin-top:2px;width:16px;height:16px;accent-color:var(--acc,#fff);flex-shrink:0"><span>Согласен на обработку персональных данных.</span></label>
+        <label style="display:flex;gap:13px;align-items:flex-start;cursor:pointer;color:rgba(var(--ink),.55);font-size:13.5px;line-height:1.45"><input required="" type="checkbox" style="margin-top:2px;width:16px;height:16px;accent-color:var(--acc,#fff);flex-shrink:0"><span>Нажимая кнопку, вы соглашаетесь с <a href="/privacy-policy.pdf" target="_blank" style="color:inherit;text-decoration:underline">Политикой конфиденциальности</a> и <a href="/personal-data-agreement.pdf" target="_blank" style="color:inherit;text-decoration:underline">Согласием на обработку персональных данных</a>.</span></label>
         <button type="submit" style="background:var(--ctaBg,#2FD08A);color:var(--ctaTx,#06140E);border:none;cursor:pointer;font-weight:700;font-size:15px;padding:17px 32px;justify-self:start;display:flex;align-items:center;gap:12px;transition:all .3s" style-hover="filter:brightness(1.08);transform:translateY(-2px)">Отправить<span style="font-family:'JetBrains Mono',monospace">→</span></button>
       </form>
       </sc-if>
@@ -651,7 +604,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Тёмно-зелёный из логотипа&quot;,&quot;Холодное белое свечение&quot;],&quot;default&quot;:&quot;Тёмно-зелёный из логотипа&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Тема&quot;},&quot;reduceMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Тема&quot;}}">
 class Component extends DCLogic {
-  state = { page: 'home', openFaq: null, transit: false, modalOpen: false, modalSent: false, formProduct: '', aios: 0, withAios: true, prodOpen: false, caseOpen: null };
+  state = { page: 'home', openFaq: null, transit: false, modalOpen: false, modalSent: false, formProduct: '', prodOpen: false, caseOpen: null };
   caseList = [
     { label: 'КЕЙС · К—01', title: 'Авторазбор телефонных звонков', desc: 'ИИ-микросервис слушает звонки, разбирает их по скрипту и находит ошибки операторов — раньше это делал человек выборочно и с задержкой в дни.', metric: '−83%', metricLabel: 'ошибок в CRM после разбора' },
     { label: 'КЕЙС · К—02', title: 'ИИ-составитель ТЗ', desc: 'Помощник собирает документацию по шаблону из брифа и голосовых заметок, снимая проблему «чистого листа» для аналитиков.', metric: '×16', metricLabel: 'скорость подготовки спецификаций' },
@@ -889,6 +842,7 @@ class Component extends DCLogic {
     return {
       isHome: page === 'home', isAgents: page === 'agents', isProcess: false,
       isDaily: page === 'dailybrief', isTraining: page === 'training',
+      isApi: page === 'api', isLocal: page === 'local', isFinetune: page === 'finetune',
       pageOp: this.state.transit ? 0 : 1,
       nav: {
         products: (page === 'dailybrief' || page === 'training') ? 1 : 0.58,
@@ -906,9 +860,12 @@ class Component extends DCLogic {
       goTraining: () => { this.setState({ prodOpen: false }); this.goTo('training'); },
       goDailyLink: (e) => { if (e) e.preventDefault(); this.goTo('dailybrief'); },
       goDevLink: (e) => { if (e) e.preventDefault(); this.goTo('agents'); },
+      goApi: wrap('api'), goLocal: wrap('local'), goFinetune: wrap('finetune'),
       goForm: () => { const onForm = ['home','agents','dailybrief','training'].includes(this.state.page); if (onForm) this.scrollTo('av-form'); else { this.goTo('home'); setTimeout(() => this.scrollTo('av-form'), 420); } },
       goCases: () => { if (this.state.page === 'home') this.scrollTo('av-cases'); else { this.goTo('home'); setTimeout(() => this.scrollTo('av-cases'), 420); } },
       goCatalog: () => this.scrollTo('av-catalog'),
+      goApproachAnchor: (e) => { if (e) e.preventDefault(); this.scrollTo('av-approach'); },
+      goRf: (e) => { if (e) e.preventDefault(); if (this.state.page === 'agents') this.scrollTo('av-rf'); else { this.goTo('agents'); setTimeout(() => this.scrollTo('av-rf'), 460); } },
       goDbReport: () => this.scrollTo('av-db-report'),
       goTrProgram: () => this.scrollTo('av-tr-program'),
       noop: (e) => { if (e) e.preventDefault(); },
