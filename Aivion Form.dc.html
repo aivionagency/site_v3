@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
+<style>
+  ::placeholder {
+    color: rgba(var(--ink), 0.4) !important;
+    opacity: 1 !important;
+  }
+</style>
 </head>
 <body>
 <x-dc>
@@ -27,7 +33,6 @@
       </div>
     </sc-if>
     <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
-    <style>::placeholder { opacity: 0.4; color: inherit; }</style>
     <form onSubmit="{{ onSubmit }}" style="display:grid;gap:18px">
       <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--accDim,rgba(var(--ink),.55));display:block;margin-bottom:8px">ЧТО ВАС ИНТЕРЕСУЕТ?</span>
         <select value="{{ product }}" onChange="{{ onProduct }}" style="width:100%;background:var(--bg);border:none;border-bottom:1px solid rgba(var(--ink),.2);color:rgba(var(--ink),.9);font-size:16px;padding:8px 0;cursor:pointer;transition:border-color .3s" style-focus="border-bottom:1px solid var(--tx)">
@@ -83,8 +88,8 @@
       </div>
       <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.45);display:block;margin-bottom:8px">КРАТКО ОПИШИТЕ ЗАДАЧУ *</span><textarea required="" rows="2" placeholder="Что хотите автоматизировать и почему" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(var(--ink),.2);color:var(--tx);font-size:16px;padding:8px 0;resize:vertical;transition:border-color .3s" style-focus="border-bottom:1px solid var(--tx)"></textarea></label>
       <label style="display:block"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.45);display:block;margin-bottom:8px">КОНТАКТ ДЛЯ СВЯЗИ *</span><input required="" type="text" placeholder="@username или +7 …" style="width:100%;background:none;border:none;border-bottom:1px solid rgba(var(--ink),.2);color:var(--tx);font-size:16px;padding:8px 0;transition:border-color .3s" style-focus="border-bottom:1px solid var(--tx)"></label>
-      <label style="display:flex;gap:12px;align-items:flex-start;cursor:pointer;color:rgba(var(--ink),.55);font-size:12.5px;line-height:1.4;margin-top:2px"><input required="" type="checkbox" style="margin-top:2px;width:15px;height:15px;accent-color:var(--acc,#fff);flex-shrink:0"><span>Нажимая кнопку, вы соглашаетесь с <a href="#" style="color:var(--acc,#fff);text-decoration:underline">Политикой конфиденциальности</a> и <a href="#" style="color:var(--acc,#fff);text-decoration:underline">Согласием на обработку персональных данных</a></span></label>
       <button type="submit" style="background:var(--ctaBg,#fff);color:var(--ctaTx,#0A0A0A);border:none;cursor:pointer;font-weight:700;font-size:15px;padding:16px 30px;justify-self:start;display:flex;align-items:center;gap:12px;transition:all .3s" style-hover="filter:brightness(1.08);transform:translateY(-2px)">Отправить заявку<span style="font-family:'JetBrains Mono',monospace">→</span></button>
+      <div style="color:rgba(var(--ink),.55);font-size:12px;line-height:1.4;margin-top:8px">Нажимая кнопку, вы соглашаетесь с <a href="/privacy-policy.pdf" target="_blank" style="color:var(--tx);text-decoration:underline">Политикой конфиденциальности</a> и <a href="/personal-data-agreement.pdf" target="_blank" style="color:var(--tx);text-decoration:underline">Согласием на обработку персональных данных</a></div>
     </form>
     </sc-if>
   </div>
