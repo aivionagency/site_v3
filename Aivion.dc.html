@@ -154,7 +154,7 @@
               <span class="av-door-arrow" style="font-family:'JetBrains Mono',monospace;font-size:20px;color:var(--acc,#fff);transition:transform .4s">↗</span>
             </div>
             <h3 style="font-size:clamp(26px,3vw,42px);font-weight:700;letter-spacing:-.02em;margin-bottom:14px">Daily Brief</h3>
-            <p style="color:rgba(var(--ink),.62);font-size:16px;line-height:1.55;margin-bottom:24px">Каждое утро система сама собирает данные из ваших программ за сутки, находит, что сломалось и почему, и присылает готовый разбор в Telegram. Никаких планёрок и ручного обхода дашбордов.</p>
+            <p style="color:rgba(var(--ink),.62);font-size:16px;line-height:1.55;margin-bottom:24px">Утренний аналитический ИИ-модуль для собственников и СЕО. Синтезирует метрики CRM, записи звонков и чаты в готовый PDF-аудит смыслов к 8:00 утра, полностью заменяя рутинные планерки.</p>
             <span style="margin-top:auto;display:inline-flex;align-items:center;gap:10px;color:var(--acc,#fff);font-weight:700;font-size:14px;font-family:'JetBrains Mono',monospace">Как это работает →</span>
           </div>
           <div data-reveal="" data-d="1" onClick="{{ goTraining }}" class="av-door" style="position:relative;border:1px solid rgba(var(--ink),.14);padding:clamp(20px,2.2vw,30px);display:flex;flex-direction:column;cursor:pointer;transition:transform .45s cubic-bezier(.16,.8,.3,1),border-color .4s,background .4s">
@@ -166,12 +166,21 @@
               <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;color:rgba(var(--ink),.6);border:1px solid rgba(var(--ink),.22);padding:5px 10px">ПРОДУКТ · ВНЕДРЕНИЕ В КОМАНДУ</span>
               <span class="av-door-arrow" style="font-family:'JetBrains Mono',monospace;font-size:20px;color:rgba(var(--ink),.45);transition:transform .4s">↗</span>
             </div>
-            <h3 style="font-size:clamp(26px,3vw,42px);font-weight:700;letter-spacing:-.02em;margin-bottom:14px">Корпоративное обучение</h3>
-            <p style="color:rgba(var(--ink),.55);font-size:16px;line-height:1.55;margin-bottom:24px">За один день ваш отдел перестаёт бояться ИИ и начинает им пользоваться. Перед воркшопом находим вашу рутину, на интенсиве автоматизируем её вживую, потом 4 недели сопровождаем.</p>
+            <h3 style="font-size:clamp(26px,3vw,42px);font-weight:700;letter-spacing:-.02em;margin-bottom:14px">ИИ-Обучение</h3>
+            <p style="color:rgba(var(--ink),.55);font-size:16px;line-height:1.55;margin-bottom:24px">Программа адаптации отделов продаж, маркетинга и HR под ключ. Включает аудит рутины, воркшоп и 4 недели сопровождения для безболезненного внедрения инструментов в ежедневную работу.</p>
+            <span style="margin-top:auto;display:inline-flex;align-items:center;gap:10px;color:var(--tx);font-weight:600;font-size:14px;border-bottom:1px solid rgba(var(--ink),.3);padding-bottom:6px;align-self:flex-start">Подробнее<span style="font-family:'JetBrains Mono',monospace">→</span></span>
+          </div>
+
+          <div data-reveal="" data-d="1" onClick="{{ goDevLink }}" class="av-door" style="position:relative;border:1px solid rgba(var(--ink),.14);padding:clamp(20px,2.2vw,30px);display:flex;flex-direction:column;cursor:pointer;transition:transform .45s cubic-bezier(.16,.8,.3,1),border-color .4s,background .4s;grid-column: 1 / -1;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;color:rgba(var(--ink),.6);border:1px solid rgba(var(--ink),.22);padding:5px 10px">РАЗРАБОТКА · ПОД КЛЮЧ</span>
+              <span class="av-door-arrow" style="font-family:'JetBrains Mono',monospace;font-size:20px;color:rgba(var(--ink),.45);transition:transform .4s">↗</span>
+            </div>
+            <h3 style="font-size:clamp(26px,3vw,42px);font-weight:700;letter-spacing:-.02em;margin-bottom:14px">ИИ-Агенты и разработка</h3>
+            <p style="color:rgba(var(--ink),.55);font-size:16px;line-height:1.55;margin-bottom:24px">Проектируем ИИ-решения под конкретную задачу по фиксированной цене. Разворачиваем системы с полной передачей чистого кода, защищая коммерческие данные.</p>
             <span style="margin-top:auto;display:inline-flex;align-items:center;gap:10px;color:var(--tx);font-weight:600;font-size:14px;border-bottom:1px solid rgba(var(--ink),.3);padding-bottom:6px;align-self:flex-start">Подробнее<span style="font-family:'JetBrains Mono',monospace">→</span></span>
           </div>
         </div>
-        <div data-reveal="" data-d="1" style="margin-top:26px;display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="color:rgba(var(--ink),.5);font-size:15px">Нужна сложная разработка под ключ?</span><a href="#" onClick="{{ goDevLink }}" style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.03em;color:var(--tx);border-bottom:1px solid var(--accDim,rgba(var(--ink),.3));padding-bottom:3px;transition:color .3s" style-hover="color:var(--acc,#fff)">→ Разработка</a></div>
       </section>
 
       <section style="max-width:1440px;margin:0 auto;padding:clamp(40px,6vw,90px) clamp(20px,4vw,56px) clamp(80px,11vw,140px)">
@@ -370,6 +379,8 @@
 
       <section style="max-width:1440px;margin:0 auto;padding:clamp(40px,6vw,90px) clamp(20px,4vw,56px) clamp(60px,8vw,110px)">
         <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(var(--ink),.4);margin-bottom:22px">03 / ПАРТНЁРСТВО</div>
+      </section>
+
       <section style="max-width:1440px;margin:0 auto;padding:clamp(40px,6vw,90px) clamp(20px,4vw,56px) clamp(60px,8vw,110px)">
         <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(var(--ink),.4);margin-bottom:22px">04 / FAQ</div><h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:clamp(36px,4.5vw,56px)">Частые вопросы</h2>
         <div data-reveal="" data-d="1" style="border-top:1px solid rgba(var(--ink),.14)">
