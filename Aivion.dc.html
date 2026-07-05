@@ -326,10 +326,8 @@
         <div style="max-width:1440px;margin:0 auto">
           <div data-reveal="" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.26em;color:rgba(var(--ink),.4);margin-bottom:22px">02 / БОЛЬШАЯ КАРТИНА</div>
           <h2 data-reveal="" data-d="1" style="font-size:clamp(30px,4.6vw,60px);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:22px">Один агент сегодня — вся система завтра</h2>
-          <p data-reveal="" data-d="1" style="color:rgba(var(--ink),.58);font-size:18px;line-height:1.55;max-width:62ch;margin-bottom:22px">Мы готовим почву под весь ваш бизнес сразу — собираем контекст и данные. Но засеваем сначала один «квадрат»: запускаем одного агента. Дальше каждый следующий агент дешевле — почва уже вспахана.</p>
-          <div data-reveal="" data-d="1" onClick="{{ goDailyLink }}" style="margin-bottom:clamp(40px,5vw,64px);display:flex;align-items:center;gap:14px;flex-wrap:wrap;border-left:2px solid var(--acc,#fff);padding:14px 22px;background:rgba(47,208,138,.04);cursor:pointer"><span style="color:rgba(var(--ink),.72);font-size:16px;line-height:1.5"><span class="av-acc" style="font-weight:600">Daily Brief</span> — входная точка в AIOS (слой Intelligence). Уже пользуетесь сводкой? Следующий шаг — отсюда →</span></div>
-
-          <div data-reveal="" data-d="1" style="display:grid;grid-template-columns:1.25fr .9fr;gap:clamp(28px,4vw,56px);align-items:center">
+          <p data-reveal="" data-d="1" style="color:rgba(var(--ink),.58);font-size:18px;line-height:1.55;max-width:62ch;margin-bottom:22px">Мы готовим почву под весь ваш бизнес сразу. Запускаем одного агента. Дальше каждый следующий агент дешевле</p>
+                    <div data-reveal="" data-d="1" style="display:grid;grid-template-columns:1.25fr .9fr;gap:clamp(28px,4vw,56px);align-items:center">
             <div>
               <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:22px">
                 <div style="display:inline-flex;border:1px solid rgba(var(--ink),.16);padding:5px;gap:4px">
@@ -337,11 +335,7 @@
                   <button onClick="{{ aios.set1 }}" style="background:{{ aios.b1 }};color:{{ aios.t1 }};border:none;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.04em;padding:11px 20px;transition:all .3s">5 агентов</button>
                   <button onClick="{{ aios.set2 }}" style="background:{{ aios.b2 }};color:{{ aios.t2 }};border:none;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.04em;padding:11px 20px;transition:all .3s">10 агентов</button>
                 </div>
-                <div style="display:inline-flex;border:1px solid rgba(var(--ink),.16);padding:5px;gap:4px">
-                  <button onClick="{{ aios.toggleAios }}" style="background:{{ aios.aiosBg }};color:{{ aios.aiosTx }};border:none;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.04em;padding:11px 20px;transition:all .3s">AIOS</button>
-                  <button onClick="{{ aios.toggleNoAios }}" style="background:{{ aios.noAiosBg }};color:{{ aios.noAiosTx }};border:none;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.04em;padding:11px 20px;transition:all .3s">Без AIOS</button>
-                </div>
-              </div>
+                              </div>
               <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;min-height:30px">
                 <sc-for list="{{ agentTags }}" as="tag" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(var(--ink),.6);border:1px solid rgba(var(--ink),.16);padding:5px 10px;background:rgba(47,208,138,.04)">{{ tag.icon }} {{ tag.label }}</span></sc-for>
               </div>
@@ -354,15 +348,15 @@
               <div style="font-size:clamp(64px,10vw,128px);font-weight:700;letter-spacing:-.04em;line-height:.9;color:var(--acc,#fff)">{{ aios.price }}<span style="font-size:.34em;color:rgba(var(--ink),.5);font-weight:500">%</span></div>
               <div style="margin-top:18px;height:8px;background:rgba(var(--ink),.08);max-width:340px;overflow:hidden"><div style="height:100%;background:var(--acc,#fff);width:{{ aios.barW }};transition:width .6s cubic-bezier(.16,.8,.3,1)"></div></div>
               <p style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:rgba(var(--ink),.4)">{{ aios.priceNote }}</p>
-              <p style="margin-top:22px;color:rgba(var(--ink),.55);font-size:15px;line-height:1.55;max-width:34ch">При 10 агентах на общем контексте AIOS цена за агента падает до <span class="av-acc" style="font-weight:600">20%</span> от цены отдельного агента. Самое главное — один раз собрать общий контекст бизнеса.</p>
+              <p style="margin-top:22px;color:rgba(var(--ink),.55);font-size:15px;line-height:1.55;max-width:34ch">При 10 агентах цена за агента падает до <span class="av-acc" style="font-weight:600">20%</span> от цены отдельного агента. Самое главное — один раз собрать общий контекст бизнеса.</p>
             </div>
           </div>
 
           <div data-reveal="" style="margin-top:clamp(56px,7vw,100px);position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(18px,2.4vw,30px)">
             <div style="position:absolute;left:0;right:0;top:34px;height:2px;background:rgba(var(--ink),.1)"><div class="av-line-draw" style="height:100%;background:var(--accDim,rgba(var(--ink),.3))"></div></div>
-            <div style="position:relative;padding-top:0"><div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--acc,#fff);background:var(--bg);margin-bottom:50px;position:relative;z-index:1"><span style="position:absolute;inset:4px;background:var(--acc,#fff);border-radius:50%"></span></div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.4);margin-bottom:10px">ПОЧВА · слои 1–2</div><h3 style="font-size:22px;font-weight:600;margin-bottom:12px">Собираем контекст</h3><p style="color:rgba(var(--ink),.55);font-size:15px;line-height:1.55">Собираем весь контекст и данные вашего бизнеса в одну базу. ИИ знает, кто вы, что продаёте и как у вас всё устроено.</p></div>
-            <div style="position:relative"><div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--acc,#fff);background:var(--bg);margin-bottom:50px;position:relative;z-index:1"><span style="position:absolute;inset:4px;background:var(--acc,#fff);border-radius:50%"></span></div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.4);margin-bottom:10px">ВСХОДЫ · слои 3–4</div><h3 style="font-size:22px;font-weight:600;margin-bottom:12px">Рутина выполняется сама</h3><p style="color:rgba(var(--ink),.55);font-size:15px;line-height:1.55">Каждое утро — короткая сводка: что произошло, где провисло, что улучшить. Рутина начинает выполняться сама.</p></div>
-            <div style="position:relative"><div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--acc,#fff);background:var(--bg);margin-bottom:50px;position:relative;z-index:1"><span style="position:absolute;inset:4px;background:var(--acc,#fff);border-radius:50%"></span></div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.4);margin-bottom:10px">УРОЖАЙ · слой 5</div><h3 style="font-size:22px;font-weight:600;margin-bottom:12px">Вы занимаетесь ростом</h3><p style="color:rgba(var(--ink),.55);font-size:15px;line-height:1.55">Вы перестаёте тушить пожары и занимаетесь стратегией и ростом. Бизнес работает, ИИ держит операционку.</p></div>
+            <div style="position:relative;padding-top:0"><div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--acc,#fff);background:var(--bg);margin-bottom:50px;position:relative;z-index:1"><span style="position:absolute;inset:4px;background:var(--acc,#fff);border-radius:50%"></span></div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.4);margin-bottom:10px">слои 1–2</div><h3 style="font-size:22px;font-weight:600;margin-bottom:12px">Собираем контекст</h3><p style="color:rgba(var(--ink),.55);font-size:15px;line-height:1.55">Собираем весь контекст и данные вашего бизнеса в одну базу. ИИ знает, кто вы, что продаёте и как у вас всё устроено.</p></div>
+            <div style="position:relative"><div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--acc,#fff);background:var(--bg);margin-bottom:50px;position:relative;z-index:1"><span style="position:absolute;inset:4px;background:var(--acc,#fff);border-radius:50%"></span></div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.4);margin-bottom:10px">слои 3–4</div><h3 style="font-size:22px;font-weight:600;margin-bottom:12px">Рутина выполняется сама</h3><p style="color:rgba(var(--ink),.55);font-size:15px;line-height:1.55">Внедряем автоматизации, где каждый новый агент умеет работать с остальными.</p></div>
+            <div style="position:relative"><div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--acc,#fff);background:var(--bg);margin-bottom:50px;position:relative;z-index:1"><span style="position:absolute;inset:4px;background:var(--acc,#fff);border-radius:50%"></span></div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(var(--ink),.4);margin-bottom:10px">слой 5</div><h3 style="font-size:22px;font-weight:600;margin-bottom:12px">Вы занимаетесь ростом</h3><p style="color:rgba(var(--ink),.55);font-size:15px;line-height:1.55">Вы перестаёте тушить пожары и занимаетесь стратегией и ростом. Бизнес работает, ИИ держит операционку.</p></div>
           </div>
         </div>
       </section>
@@ -848,9 +842,8 @@ class Component extends DCLogic {
 
     // AIOS field
     const lv = this.state.aios;
-    const withAios = this.state.withAios !== false;
     const litCount = [1, 5, 10][lv];
-    const pricePct = withAios ? [100, 45, 20][lv] : 100;
+    const pricePct = [100, 45, 20][lv];
     const agentIcons = [
       { icon: '🎯', label: 'Лиды' }, { icon: '📞', label: 'Звонки' }, { icon: '🎧', label: 'Поддержка' },
       { icon: '📄', label: 'Документы' }, { icon: '📝', label: 'КП' }, { icon: '💻', label: 'Код' },
@@ -936,10 +929,7 @@ class Component extends DCLogic {
         set0: () => this.setState({ aios: 0 }), set1: () => this.setState({ aios: 1 }), set2: () => this.setState({ aios: 2 }),
         b0: segBg(0), b1: segBg(1), b2: segBg(2), t0: segTx(0), t1: segTx(1), t2: segTx(2),
         price: pricePct, barW: pricePct + '%',
-        withAios, toggleAios: () => this.setState({ withAios: true }), toggleNoAios: () => this.setState({ withAios: false }),
-        aiosBg: withAios ? 'var(--acc,#fff)' : 'transparent', aiosTx: withAios ? 'var(--ctaTx,#06140E)' : 'rgba(var(--ink),.6)',
-        noAiosBg: !withAios ? 'var(--acc,#fff)' : 'transparent', noAiosTx: !withAios ? 'var(--ctaTx,#06140E)' : 'rgba(var(--ink),.6)',
-        priceNote: withAios ? 'при общем контексте бизнеса' : 'без общего контекста — каждый агент отдельно',
+        priceNote: 'при общем контексте бизнеса',
       },
       agentTags,
       cells,
