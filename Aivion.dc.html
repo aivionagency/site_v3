@@ -813,8 +813,8 @@ class Component extends DCLogic {
     resize();
     this._onMove = (e) => { const r = c.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.active = true; };
     this._onLeave = () => { mouse.active = false; mouse.x = -9999; mouse.y = -9999; };
-    c.addEventListener('mousemove', this._onMove);
-    c.addEventListener('mouseleave', this._onLeave);
+    c.parentElement.addEventListener('mousemove', this._onMove);
+    c.parentElement.addEventListener('mouseleave', this._onLeave);
     const cr = accRGB[0], cg = accRGB[1], cb = accRGB[2];
     const LINK = 132;
     const draw = () => {
