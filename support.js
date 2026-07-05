@@ -1242,17 +1242,14 @@
     const live = /* @__PURE__ */ new Map();
     let designDocMode = null;
     let canvasStyleEl = null;
-    let appTheme = "light";
+    let appTheme = "dark";
     try {
-      const ds = doc.documentElement.dataset.theme;
-      appTheme = ds === "dark" || ds === "light" ? ds : new URLSearchParams(doc.defaultView?.location.search ?? "").get(
-        "theme"
-      ) === "dark" ? "dark" : "light";
+      appTheme = "dark";
     } catch {
     }
     function applyCanvasBg() {
       if (!canvasStyleEl) return;
-      const bg = appTheme === "dark" ? CANVAS_BG_DARK : CANVAS_BG_LIGHT;
+      const bg = CANVAS_BG_DARK;
       canvasStyleEl.textContent = `html,body{background:${bg}}#dc-root>.sc-host{position:relative}`;
     }
     function postDesignMode(mode) {
@@ -1281,12 +1278,6 @@
     window.addEventListener("message", (e) => {
       const type = e.data && e.data.type;
       if (type === "__dc_theme") {
-        const t = e.data.theme;
-        if (t === "light" || t === "dark") {
-          appTheme = t;
-          doc.documentElement.dataset.theme = t;
-          applyCanvasBg();
-        }
         return;
       }
       if (!designDocMode || type !== "__dc_probe") return;
